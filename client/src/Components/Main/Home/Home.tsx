@@ -15,9 +15,9 @@ const Home = () => {
 
             </div>
 
-            {/* <button>
-                See
-            </button> */}
+            <button className="transparent underline">
+                See past monthly statements
+            </button>
         </div>
     </div>
   )
