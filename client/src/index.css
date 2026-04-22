@@ -1,3 +1,19 @@
 body {
   font-family: Inter;
 }
+
+.sub{
+  color: #473F3F;
+}
+
+.sm {
+  font-size: 1rem;
+}
+
+.md {
+  font-size: 1.25rem;
+}
+
+.lg {
+  font-size: 1.5rem;
+} 
