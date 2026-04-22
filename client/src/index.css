@@ -5,6 +5,10 @@ body {
   margin: 0;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .sub{
   color: #938D8D;
 }
@@ -42,4 +46,18 @@ body {
 
 .green-btn{
   border-radius: 12px;
+}
+
+.span {
+  display: flex;
+  flex-direction: row;
+  gap: 1.25rem;
+}
+
+.logo {
+  position: fixed;
+  top: 1.25rem;
+  right: 2rem;
+  width: 50px;
+  height: auto;
 }
