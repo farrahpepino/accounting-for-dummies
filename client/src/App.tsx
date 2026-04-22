@@ -1,11 +1,10 @@
 import './App.css'
-import Sidebar from './Components/Shared/Navigation/Sidebar/Sidebar'
-
+import Home from './Components/Main/Home/Home'
 function App() {
 
   return (
    <div>
-    <Sidebar/>
+    <Home/>
    </div>
   )
 }
