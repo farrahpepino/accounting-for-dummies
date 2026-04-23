@@ -1,11 +1,11 @@
 import './App.css'
-import Accounts from './Components/Main/Accounts/Accounts'
+import Transactions from './Components/Main/Transactions/Transactions';
 
 function App() {
 
   return (
    <div>
-    <Accounts />
+    <Transactions />
    </div>
   )
 }

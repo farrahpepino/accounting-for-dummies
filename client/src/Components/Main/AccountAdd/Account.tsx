@@ -1,9 +1,9 @@
 // import React from 'react'
-import Logo from "../../Shared/Logo/Logo";
-import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar";
-import './Settings.css'
+import Logo from "../../Shared/Logo/Logo"
+import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar"
+import './AccountAdd.css'
 
-const Settings = () => {
+const Account = () => {
     return (
         <div>
             <Logo />
@@ -18,4 +18,4 @@ const Settings = () => {
       )
 }
 
-export default Settings
+export default Account
