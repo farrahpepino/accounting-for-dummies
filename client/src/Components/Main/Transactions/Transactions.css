@@ -16,6 +16,7 @@
     margin: 4rem auto 0 auto; 
     margin-top: 7rem;
     bottom: 2rem;
+    contain: strict;
 }
 
 .mg-2 {
@@ -70,6 +71,14 @@ table tr td {
     text-align: center;
     overflow: hidden;
     white-space: nowrap;
+}
+
+table tr th {
+    width: 15%;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
 }
 
 .mg-5 {

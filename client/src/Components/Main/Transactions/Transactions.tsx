@@ -55,15 +55,19 @@ const Transactions = () => {
 
                 <br /><br /><br />
 
-                <div className='span'>
-                    {entities.map((entity, index) => (
-                        <div key={index} className='bold rows'>{entity}</div>
-                    ))}
-                </div>
+                
 
-                <div className="divider"></div>
                 <table>
-                    
+                <thead>
+                        <tr className="span divider">
+                            {entities.map((entity, index) => (
+                                <th key={index} className="bold rows">
+                                    {entity}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
                     {
                     transactions.map((transaction)=>(
                         <tr key={transaction.id} className='span divider'>
@@ -102,7 +106,8 @@ const Transactions = () => {
                             </td>
                         </tr>
                     ))
-                    }    
+                    }   
+                    </tbody> 
                 </table>
 
                 <div className='pages sub xs span'>
