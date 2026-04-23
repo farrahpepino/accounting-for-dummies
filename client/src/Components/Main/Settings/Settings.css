@@ -6,18 +6,33 @@
     position: fixed;
 }
 
-.box{
+.box {
     display: flex;
     flex-direction: column;
-    height: 77.5vh;
     width: 80%;
     padding: 2rem;
     position: relative;
     margin: 4rem auto 0 auto; 
-    margin-top: 7rem;
-    bottom: 2rem;
+    contain: strict;
 }
 
-.mg-2 {
+.settings {
+    margin-top: 7rem;
+    height: 27vh;
+}
+
+.delete {
+    height: 15vh;
+}
+
+.ml-2 {
     margin-left: 2rem;
+}
+
+.mr-5 {
+    margin-right: 5px;
+}
+
+input {
+    width: 16.5rem;
 }

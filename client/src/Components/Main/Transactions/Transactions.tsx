@@ -75,14 +75,14 @@ const Transactions = () => {
                             <td>{transaction.Type}</td>
                             <td>{transaction.Account}</td>
                             <td>
-                                <span className='sub mg-5'>$</span>
+                                <span className='sub mr-5'>$</span>
                                 {transaction.Amount
                                 ? CleanData(String(transaction.Amount.toFixed(2)).slice(0, 6)) + (transaction.Amount.toString().replace(".", "").length >= 6 ? "..." : "")
                                 : ""}
                             </td>
                             <td>
                                 <div className={transaction.Debit ? 'debit' : 'hidden'}>
-                                <span className='sub mg-5'>$</span>
+                                <span className='sub mr-5'>$</span>
                                 {transaction.Debit
                                 ? CleanData(String(transaction.Debit.toFixed(2)).slice(0, 6)) + (transaction.Debit.toString().replace(".", "").length >= 6 ? "..." : "")
                                 : ""}
@@ -91,7 +91,7 @@ const Transactions = () => {
 
                             <td>
                             <div className={transaction.Credit ? 'credit' : 'hidden'}>
-                                <span className='sub mg-5'>$</span>
+                                <span className='sub mr-5'>$</span>
                                 {transaction.Credit
                                 ? CleanData(String(transaction.Credit.toFixed(2)).slice(0, 6)) + (transaction.Credit.toString().replace(".", "").length >= 6 ? "..." : "")
                                 : ""}
@@ -99,7 +99,7 @@ const Transactions = () => {
                             </td>
 
                             <td>    
-                                <span className='sub mg-5'>$</span>
+                                <span className='sub mr-5'>$</span>
                                {transaction.Balance
                                 ? CleanData(String(transaction.Balance.toFixed(2)).slice(0, 6)) + (transaction.Balance.toString().replace(".", "").length >= 6 ? "..." : "")
                                 : ""}

@@ -19,7 +19,7 @@
     contain: strict;
 }
 
-.mg-2 {
+.ml-2 {
     margin-left: 2rem;
 }
 
@@ -80,7 +80,7 @@ table tr th {
     white-space: nowrap;
 }
 
-.mg-5 {
+.mr-5 {
     margin-right: 5px;
 }
 
