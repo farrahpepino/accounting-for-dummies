@@ -21,13 +21,22 @@
     margin-right: 4rem;
 }
 
+.balances .span{
+    gap: 5rem;
+}
+
 .tracker{
     margin: 0;
     margin-left: 4rem;
     margin-right: 4rem;
 }
 
+.tracker .span{
+    gap: 1rem;
+}
+
 .btn {
    width: 11rem;
    margin-left: 4rem;
 }
+

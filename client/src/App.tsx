@@ -1,10 +1,11 @@
 import './App.css'
-import Home from './Components/Main/Home/Home'
+import Accounts from './Components/Main/Accounts/Accounts'
+
 function App() {
 
   return (
    <div>
-    <Home/>
+    <Accounts />
    </div>
   )
 }

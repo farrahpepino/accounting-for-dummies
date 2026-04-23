@@ -51,13 +51,7 @@ body {
 .span {
   display: flex;
   flex-direction: row;
-  gap: 1.25rem;
+  align-items: center;
+  gap: 1rem;
 }
 
-.logo {
-  position: fixed;
-  top: 1.25rem;
-  right: 2rem;
-  width: 50px;
-  height: auto;
-}
