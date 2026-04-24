@@ -1,11 +1,10 @@
 import './App.css'
-// import Entry from './Components/Main/Entry/Entry'
-import Settings from './Components/Main/Settings/Settings'
+import TransactionEdit from './Components/Main/TransactionEdit/TransactionEdit'
 function App() {
 
   return (
    <div>
-    <Settings />
+    <TransactionEdit />
    </div>
   )
 }
