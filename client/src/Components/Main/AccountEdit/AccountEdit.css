@@ -21,3 +21,30 @@
 .ml-2 {
     margin-left: 2rem;
 }
+
+form {
+    margin: 0 auto;
+    width: 70%;
+}
+
+.mr-2{
+    margin-right: 2rem;
+}
+
+.mt {
+    margin-top: 0.5rem;
+}
+
+.ml-6{
+    margin-left: 6rem;
+}
+
+input {
+    width: 15rem;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5rem;
+}

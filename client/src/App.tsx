@@ -1,10 +1,10 @@
 import './App.css'
-import TransactionEdit from './Components/Main/TransactionEdit/TransactionEdit'
+import Login from './Components/Auth/Login/Login'
 function App() {
 
   return (
    <div>
-    <TransactionEdit />
+    <Login />
    </div>
   )
 }
