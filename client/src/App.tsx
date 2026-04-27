@@ -8,7 +8,6 @@ import Transactions from './Pages/Main/Transactions/Transactions';
 import Entry from './Pages/Main/Entry/Entry';
 import Login from './Pages/Auth/Login/Login';
 
-
 import Account from './Pages/Main/AccountAdd/Account';
 import AccountEdit from './Pages/Main/AccountEdit/AccountEdit';
 import TransactionEdit from './Pages/Main/TransactionEdit/TransactionEdit';
@@ -22,7 +21,7 @@ function App() {
     <Route path="/login"        element={<Login />} />
 
     <Route element={<ProtectedRoutes />}>
-      
+
       <Route path="/"        element={<Home />} />
       <Route path="/accounts"        element={<Accounts />} />
       <Route path="/transactions"        element={<Transactions />} />
