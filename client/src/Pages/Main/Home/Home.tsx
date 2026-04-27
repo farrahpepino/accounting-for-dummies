@@ -1,4 +1,3 @@
-// import React from 'react'
 import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar"
 import './Home.css'
 import Logo from "../../Shared/Logo/Logo"

@@ -1,4 +1,3 @@
-// import React from 'react'
 import './Transactions.css';
 import Logo from '../../Shared/Logo/Logo';
 import Sidebar from '../../Shared/Navigation/Sidebar/Sidebar';
