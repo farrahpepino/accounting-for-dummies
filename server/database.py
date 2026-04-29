@@ -5,8 +5,15 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-DB_URL = os.getenv("DB_URL")
+DB_URL = os.getenv("db_url")
 
 engine = create_engine(DB_URL)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
