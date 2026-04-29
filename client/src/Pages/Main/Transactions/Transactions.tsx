@@ -1,8 +1,7 @@
 import './Transactions.css';
 import Logo from '../../Shared/Logo/Logo';
 import Sidebar from '../../Shared/Navigation/Sidebar/Sidebar';
-import { CleanData } from '../../../Services/CleanData';
-
+import { CleanDigits } from '../../../Utils/CleanDigits';
 const Transactions = () => {
 
     const entities = [
@@ -76,14 +75,14 @@ const Transactions = () => {
                             <td>
                                 <span className='sub mr-5'>$</span>
                                 {transaction.Amount
-                                ? CleanData(String(transaction.Amount.toFixed(2)).slice(0, 6)) + (transaction.Amount.toString().replace(".", "").length >= 6 ? "..." : "")
+                                ? CleanDigits(String(transaction.Amount.toFixed(2)).slice(0, 6)) + (transaction.Amount.toString().replace(".", "").length >= 6 ? "..." : "")
                                 : ""}
                             </td>
                             <td>
                                 <div className={transaction.Debit ? 'debit' : 'hidden'}>
                                 <span className='sub mr-5'>$</span>
                                 {transaction.Debit
-                                ? CleanData(String(transaction.Debit.toFixed(2)).slice(0, 6)) + (transaction.Debit.toString().replace(".", "").length >= 6 ? "..." : "")
+                                ? CleanDigits(String(transaction.Debit.toFixed(2)).slice(0, 6)) + (transaction.Debit.toString().replace(".", "").length >= 6 ? "..." : "")
                                 : ""}
                                 </div>
                             </td>
@@ -92,7 +91,7 @@ const Transactions = () => {
                             <div className={transaction.Credit ? 'credit' : 'hidden'}>
                                 <span className='sub mr-5'>$</span>
                                 {transaction.Credit
-                                ? CleanData(String(transaction.Credit.toFixed(2)).slice(0, 6)) + (transaction.Credit.toString().replace(".", "").length >= 6 ? "..." : "")
+                                ? CleanDigits(String(transaction.Credit.toFixed(2)).slice(0, 6)) + (transaction.Credit.toString().replace(".", "").length >= 6 ? "..." : "")
                                 : ""}
                                 </div>
                             </td>
@@ -100,7 +99,7 @@ const Transactions = () => {
                             <td>    
                                 <span className='sub mr-5'>$</span>
                                {transaction.Balance
-                                ? CleanData(String(transaction.Balance.toFixed(2)).slice(0, 6)) + (transaction.Balance.toString().replace(".", "").length >= 6 ? "..." : "")
+                                ? CleanDigits(String(transaction.Balance.toFixed(2)).slice(0, 6)) + (transaction.Balance.toString().replace(".", "").length >= 6 ? "..." : "")
                                 : ""}
                             </td>
                         </tr>

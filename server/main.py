@@ -1,9 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from database import Base, engine
 from Controllers import auth
+from Schemas.user import User
 
 app = FastAPI()
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -13,8 +16,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth.router)
 
-@app.get('/')
-def root():
-    return {"message": "Hello World!"}
+@app.on_event("startup")
+def startup():
+    Base.metadata.create_all(bind=engine)
+    
+app.include_router(auth.router)

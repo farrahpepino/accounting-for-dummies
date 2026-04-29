@@ -46,7 +46,7 @@ input {
 }
 
 .buttons {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 5rem;
+    position: fixed;
+    right: 10%;
+    bottom: 8%;
 }

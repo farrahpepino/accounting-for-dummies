@@ -1,7 +1,20 @@
 import './Sidebar.css'
+import { useNavigate } from "react-router-dom";
 
 
 const Sidebar = () => {
+
+  const navigate = useNavigate();
+
+  const navigateTo = (page: string) => {
+    navigate(`/${page}`);
+  } 
+
+  const signOut = () => {
+    localStorage.clear();
+    navigate("/login", { replace: true });
+  }
+
   return (
     <div className="Sidebar">
       <div className="header">
@@ -13,14 +26,14 @@ const Sidebar = () => {
       </div>
 
       <div className='nav'>
-        <p>Overview</p>
-        <p>Accounts</p>
-        <p>Transactions</p>
-        <p>+ New Entry</p>
+        <p><button className='bt-transparent' onClick={()=>navigateTo("")}>Overview</button></p>
+        <p><button className='bt-transparent' onClick={()=>navigateTo("accounts")}>Accounts</button></p>
+        <p><button className='bt-transparent' onClick={()=>navigateTo("transactions")}>Transactions</button></p>
+        <p><button className='bt-transparent' onClick={()=>navigateTo("entry")}>+ New Entry</button></p>
       </div>
 
       <div className="sub footer sm">
-        Sign out
+        <button type="button" className='bt-transparent' onClick={()=>signOut()}>Sign out</button>
       </div>
     </div>
   )

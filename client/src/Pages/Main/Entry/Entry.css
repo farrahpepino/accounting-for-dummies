@@ -9,7 +9,8 @@
 .box{
     display: flex;
     flex-direction: column;
-    height: 77.5vh;
+    min-height: 77.5vh;
+    height: fit-content;
     width: 80%;
     padding: 2rem;
     position: relative;
@@ -44,7 +45,7 @@ input {
 }
 
 .buttons {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 5rem;
+    position: fixed;
+    right: 10%;
+    bottom: 8%;
 }
