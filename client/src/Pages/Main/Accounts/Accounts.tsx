@@ -1,8 +1,12 @@
 import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar"
 import Logo from "../../Shared/Logo/Logo"
 import './Accounts.css'
+import { useNavigate } from "react-router-dom"
 
 const Accounts = () => {
+
+    const navigate = useNavigate();
+
   return (
     <div>
         <Logo />
@@ -10,7 +14,10 @@ const Accounts = () => {
 
         <div className="container">
             <div className="border box">
-                <div className="bold lg">Accounts</div>
+                <div className="span space-between">
+                    <div className="bold lg">Accounts</div>
+                    <button className="bt-transparent sub" onClick={()=>navigate("/add-account")}>+ Add an account</button>
+                </div>
                 <br /><br /><br />
                 <div className="ml-2">
                     <div className="span bold lg">
