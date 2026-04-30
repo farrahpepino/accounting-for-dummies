@@ -96,7 +96,7 @@ const TransactionEdit = () => {
                         </div>
                     </form>
 
-                    <div className="span buttons">
+                    <div className="span ">
                         <button className="red-btn btn">Delete</button>
                         <button className="green-btn btn">Save</button>
                     </div>

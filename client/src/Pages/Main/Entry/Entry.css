@@ -46,6 +46,7 @@ input {
 
 .buttons {
     position: fixed;
-    right: 10%;
+    left: 50%;
+    transform: translate(-50%);
     bottom: 8%;
 }
