@@ -8,7 +8,7 @@ class User_Repository:
             email = email,
             name = name
         )
-        
+                
         db.add(user)
         db.commit()
         db.refresh(user)

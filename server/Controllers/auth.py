@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from Services.auth import Auth_Service
 from DTOs.token import Token_Request
-from DTOs.user_dto import User_Dto
+from DTOs.user import User_Dto
 
 router = APIRouter()
 auth_service = Auth_Service()

@@ -1,7 +1,8 @@
 import './Transactions.css';
 import Logo from '../../Shared/Logo/Logo';
 import Sidebar from '../../Shared/Navigation/Sidebar/Sidebar';
-import { CleanDigits } from '../../../Utils/CleanDigits';
+import { CleanDigits } from '../../../Services/CleanDigits';
+
 const Transactions = () => {
 
     const entities = [

@@ -3,7 +3,7 @@ from google.auth.transport import requests
 from fastapi import HTTPException
 import os
 
-from Repositories.auth import User_Repository
+from Repositories.user import User_Repository
 
 class Auth_Service:
     
