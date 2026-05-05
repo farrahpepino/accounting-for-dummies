@@ -1,5 +1,6 @@
 import './Sidebar.css'
 import { NavLink } from "react-router-dom";
+import { ResetStorage } from '../../../../Services/ResetStorage';
 
 const Sidebar = () => {
 
@@ -43,6 +44,7 @@ const Sidebar = () => {
       <NavLink
         to="/login"
         className="sub footer sm"
+        onClick={ResetStorage}
       >
         Sign out
       </NavLink>
