@@ -1,19 +1,7 @@
 import './Sidebar.css'
-import { useNavigate } from "react-router-dom";
-
+import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
-
-  const navigate = useNavigate();
-
-  const navigateTo = (page: string) => {
-    navigate(`/${page}`);
-  } 
-
-  const signOut = () => {
-    localStorage.clear();
-    navigate("/login", { replace: true });
-  }
 
   return (
     <div className="Sidebar">
@@ -26,15 +14,38 @@ const Sidebar = () => {
       </div>
 
       <div className='nav'>
-        <p><button className='bt-transparent' onClick={()=>navigateTo("")}>Overview</button></p>
-        <p><button className='bt-transparent' onClick={()=>navigateTo("accounts")}>Accounts</button></p>
-        <p><button className='bt-transparent' onClick={()=>navigateTo("transactions")}>Transactions</button></p>
-        <p><button className='bt-transparent' onClick={()=>navigateTo("entry")}>+ New Entry</button></p>
+        <NavLink
+          to="/"
+          className={({ isActive }) => `bt-transparent ${isActive ? "active" : ""}`}
+        >
+          Overview
+        </NavLink>
+        <NavLink
+          to="/accounts"
+          className={({ isActive }) => `bt-transparent ${isActive ? "active" : ""}`}
+        >
+          Accounts
+        </NavLink>
+        <NavLink
+          to="/transactions"
+          className={({ isActive }) => `bt-transparent ${isActive ? "active" : ""}`}
+        >
+          Transactions
+        </NavLink>
+        <NavLink
+          to="/entry"
+          className={({ isActive }) => `bt-transparent ${isActive ? "active" : ""}`}
+        >
+          + New Entry
+        </NavLink>
       </div>
 
-      <div className="sub footer sm">
-        <button type="button" className='bt-transparent' onClick={()=>signOut()}>Sign out</button>
-      </div>
+      <NavLink
+        to="/login"
+        className="sub footer sm"
+      >
+        Sign out
+      </NavLink>
     </div>
   )
 }
