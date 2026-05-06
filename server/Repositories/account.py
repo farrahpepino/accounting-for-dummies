@@ -14,3 +14,14 @@ class Account_Repository:
     
     def get_accounts(self, db:Session, user_id: str):
         return db.query(Account).filter(Account.user_id == user_id).all()
+    
+    def delete_account(self, db:Session, id: str):
+        account = db.query(Account).filter(Account.id == id).first()
+        
+        if not account:
+            return None
+        
+        db.delete(account)
+        db.commit()
+        
+        return True 

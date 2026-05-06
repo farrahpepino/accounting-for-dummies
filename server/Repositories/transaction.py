@@ -14,3 +14,15 @@ class Transaction_Repository:
     
     def get_transactions(self, db:Session, type: str):
         return db.query(Transaction).filter(Transaction.type == type).all()
+    
+    def delete_transaction(self, db:Session, id: str):
+        transaction = db.query(Transaction).filter(Transaction.id == id).first()
+        
+        if not transaction:
+            return None
+        
+        db.delete(transaction)
+        db.commit()
+        
+        return True
+        
