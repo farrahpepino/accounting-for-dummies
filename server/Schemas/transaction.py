@@ -4,7 +4,7 @@ import uuid
 
 
 class Transaction(Base):
-    __tablename__ = "accounts"
+    __tablename__ = "transactions"
     
     id = Column(String(36), primary_key=True, index=True, unique=True, default=lambda:str(uuid.uuid4())) 
     user_id = Column(String(36), index=True)

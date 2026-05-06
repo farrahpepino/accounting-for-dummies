@@ -9,7 +9,6 @@ from DTOs.user import User_Dto
 router = APIRouter()
 auth_service = Auth_Service()
 
-
 @router.post("/auth/google", response_model=User_Dto)
 def google_auth(body: Token_Request, db: Session = Depends(get_db)):
     return auth_service.authenticate_account(db, body.token)

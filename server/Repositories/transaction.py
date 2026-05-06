@@ -12,5 +12,5 @@ class Transaction_Repository:
         db.refresh(transaction)
         return transaction
     
-    def get_transactions(self, db:Session, account_id: str):
-        return db.query(Transaction).filter(Transaction.from_bank == account_id).all()
+    def get_transactions(self, db:Session, type: str):
+        return db.query(Transaction).filter(Transaction.type == type).all()
