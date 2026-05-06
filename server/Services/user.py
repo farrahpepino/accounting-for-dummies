@@ -1,6 +1,6 @@
 from Repositories.user import User_Repository
 
-class Auth_Service:
+class User_Service:
     
     def __init__(self):
         self.repository = User_Repository()

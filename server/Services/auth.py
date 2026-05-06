@@ -1,9 +1,9 @@
 from google.oauth2 import id_token
 from google.auth.transport import requests
-from fastapi import HTTPException
 import os
 
 from Repositories.user import User_Repository
+from Exceptions.auth import InvalidTokenError
 
 class Auth_Service:
     
@@ -18,8 +18,8 @@ class Auth_Service:
                 os.getenv("google_client_id")
             )
             
-        except Exception:
-            raise HTTPException(status_code=401, detail="Invalid token")
+        except ValueError:
+            raise InvalidTokenError()
         
         id = idinfo["sub"]
         email = idinfo["email"]

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -9,10 +9,39 @@ from DTOs.account import Account_Dto
 router = APIRouter()
 service = Account_Service()
 
-@router.post("/account/create-account", response_model=Account_Dto)
+@router.post("/accounts", response_model=Account_Dto)
 def create_account(body: Account_Dto, db: Session = Depends(get_db)):
-    return service.create_account(db, body)
+    account = service.create_account(db, body)
 
-@router.get("/account/get-accounts/{user_id}", response_model=List[Account_Dto])
+    if not account:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Account could not be created"
+        )
+
+    return account
+
+@router.get("/accounts/{user_id}", response_model=List[Account_Dto])
 def get_accounts(user_id, db: Session = Depends(get_db)):
-    return service.get_accounts(db, user_id)
+    accounts = service.get_accounts(db, user_id)
+
+    if accounts is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found or no accounts exist"
+        )
+
+    return accounts
+
+
+@router.delete("accounts/{id}")
+def delere_account(id, db: Session = Depends(get_db)):
+    deleted = service.delete_account(db, id)
+    
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Account could not be deleted"
+        )
+        
+    return deleted
