@@ -2,5 +2,5 @@
 CREATE DATABASE Savora;
 
 -- STEP 2
-USE DATABASE Savora;
+USE Savora;
 
