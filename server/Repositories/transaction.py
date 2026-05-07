@@ -12,8 +12,8 @@ class Transaction_Repository:
         db.refresh(transaction)
         return transaction
     
-    def get_transactions(self, db:Session, type: str):
-        return db.query(Transaction).filter(Transaction.type == type).all()
+    def get_transactions(self, db:Session, type: str, user_id: str):
+        return db.query(Transaction).filter(Transaction.type == type, Transaction.user_id == user_id).all()
     
     def delete_transaction(self, db:Session, id: str):
         transaction = db.query(Transaction).filter(Transaction.id == id).first()
