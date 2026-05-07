@@ -1,14 +1,14 @@
 import Logo from "../../Shared/Logo/Logo";
 import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar";
 import './Settings.css'
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
 
-    const user = {
-        "id": 1,
-        "Name": "Farrah Pepino",
-        "Email": "pepinoalyssa@gmail.com"
-    }
+    const apiUrl = import.meta.env.VITE_API_URL; 
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const navigate = useNavigate();
+
     return (
         <div>
             <Logo />
@@ -22,12 +22,12 @@ const Settings = () => {
                     <div>
                         <div className="span">
                             <div className="bold ml-2 lg">Name</div>
-                            <div className="sub">{user.Name}</div>
+                            <div className="sub">{user.name}</div>
                         </div>
                         <br /><br />
                         <div className="span">
                             <div className="bold ml-2 lg">Email</div>
-                            <div className="sub">{user.Email}</div>
+                            <div className="sub">{user.email}</div>
                         </div>
                     </div>
                 </div>

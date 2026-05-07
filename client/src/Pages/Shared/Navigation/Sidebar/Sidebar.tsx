@@ -4,12 +4,14 @@ import { ResetStorage } from '../../../../Services/ResetStorage';
 
 const Sidebar = () => {
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
   return (
     <div className="Sidebar">
       <div className="header">
         <div>
-          <div className='md'>Farrah Pepino</div>
-          <div className="sub sm">pepinoalyssa@gmail.com</div>
+          <div className='md'>{user.name}</div>
+          <div className="sub sm">{user.email}</div>
         </div>
         <NavLink
           to="/settings"

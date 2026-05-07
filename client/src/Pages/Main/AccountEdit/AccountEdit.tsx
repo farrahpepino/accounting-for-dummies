@@ -1,6 +1,5 @@
 import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar"
 import Logo from "../../Shared/Logo/Logo"
-import './AccountEdit.css'
 
 const AccountEdit = () => {
     return (

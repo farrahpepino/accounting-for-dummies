@@ -37,7 +37,6 @@ const Accounts = () => {
                 setCreditAccounts(credit.data);
                 setSavingsAccounts(savings.data);
                 
-                
             } catch (err) {
                 console.error("Failed to fetch accounts:", err);
             }
