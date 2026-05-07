@@ -1,8 +1,12 @@
 import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar"
 import './Home.css'
 import Logo from "../../Shared/Logo/Logo"
+import { useNavigate } from "react-router-dom"
 
 const Home = () => {
+
+  const navigate = useNavigate();
+
   return (
     <div className="Home">
         <Logo />
@@ -36,7 +40,7 @@ const Home = () => {
             <br />
             <br />
 
-            <button className="transparent underline black ml-4 w-11">
+            <button className="transparent underline black ml-4 w-11" onClick={()=>navigate("/statements")}>
                 See past monthly statements
             </button>
         </div>

@@ -45,7 +45,10 @@ const TransactionEdit = () => {
                                 <div className="span">
                                     <strong>From</strong>
                                     <div className="span ml-2 mr-2">
-                                        <span>BofA Checking 5678</span>
+                                        <span className="gap-5">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#938D8D"><path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z"/></svg>
+                                            5678
+                                        </span>
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/></svg>
                                     </div>
                                 </div>
@@ -53,7 +56,10 @@ const TransactionEdit = () => {
                                 <div className="span">
                                     <strong>To</strong>
                                     <div className="span ml-2">
-                                        <span>BofA Savings 9218</span>
+                                        <span className="gap-5">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#938D8D"><path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z"/></svg>
+                                            9218
+                                        </span>
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/></svg>
                                     </div>
                                 </div>
@@ -96,7 +102,9 @@ const TransactionEdit = () => {
                         </div>
                     </form>
 
-                    <div className="span ">
+                    <br /><br /><br />
+
+                    <div className="span set-buttons">
                         <button className="red-btn btn">Delete</button>
                         <button className="green-btn btn">Save</button>
                     </div>

@@ -170,3 +170,10 @@ input {
 .xs {
   font-size: 0.75rem;
 }
+
+.gap-5 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
