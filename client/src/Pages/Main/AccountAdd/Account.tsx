@@ -1,8 +1,12 @@
 import Logo from "../../Shared/Logo/Logo"
 import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar"
 import './AccountAdd.css'
+import { useNavigate } from "react-router-dom"
 
 const Account = () => {
+
+    const navigate = useNavigate();
+
     return (
         <div>
             <Logo />
@@ -11,7 +15,9 @@ const Account = () => {
             <div className='container'>
                 <div className='box border'>
                     <div className="span">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/></svg>
+                        <button title="back" onClick={()=> navigate("/accounts")} className="transparent">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/></svg>
+                        </button>
                         <div className="bold lg">Add Account</div>
                     </div>
                     <br /><br /><br />
@@ -41,10 +47,7 @@ const Account = () => {
                             <div>
                                 <strong>Bank</strong>
                                 <br />
-                                <div className="span ml-6 mt">
-                                    <span>BofA (Bank of America)</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/></svg>
-                                </div>
+                                <input type="text" title="bank" name="bank" id="bank" className="border ml-6 mt" />
                             </div>
                             <br />
                             <br />
@@ -68,7 +71,7 @@ const Account = () => {
                             <div>
                                 <strong>Last 4 digits</strong>
                                 <br />
-                                <input type="text" title="note" name="note" id="note" className="border ml-6 mt"/>
+                                <input type="number" title="four_digits" name="four_digits" id="four_digits" className="border ml-6 mt" pattern="^\S+$"/>
                             </div>
                         </div>
                     </form>

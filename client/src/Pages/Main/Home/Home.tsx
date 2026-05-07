@@ -40,7 +40,7 @@ const Home = () => {
             <br />
             <br />
 
-            <button className="transparent underline black ml-4 w-11" onClick={()=>navigate("/statements")}>
+            <button className="transparent underline black ml-5 w-11" onClick={()=>navigate("/statements")}>
                 See past monthly statements
             </button>
         </div>

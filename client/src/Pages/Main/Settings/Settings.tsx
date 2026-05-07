@@ -22,7 +22,7 @@ const Settings = () => {
                     <div>
                         <div className="span">
                             <div className="bold ml-2 lg">Name</div>
-                            <div>{user.Name}</div>
+                            <div className="sub">{user.Name}</div>
                         </div>
                         <br /><br />
                         <div className="span">
