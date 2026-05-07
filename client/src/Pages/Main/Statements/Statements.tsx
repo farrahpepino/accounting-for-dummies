@@ -1,5 +1,6 @@
 import Logo from "../../Shared/Logo/Logo"
 import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar"
+import './Statements.css'
 
 const Statements = () => {
     return (
