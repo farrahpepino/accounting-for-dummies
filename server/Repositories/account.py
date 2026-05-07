@@ -12,8 +12,11 @@ class Account_Repository:
         db.refresh(account)
         return account
     
-    def get_accounts(self, db:Session, type: str, user_id: str):
-        return db.query(Account).filter(Account.user_id == user_id, Account.type == type).all()
+    def get_accounts(self, db:Session, account_type: str, user_id: str):
+        return db.query(Account)\
+                .filter(Account.user_id == user_id)\
+                .filter(Account.type == account_type)\
+                .all()
     
     def delete_account(self, db:Session, id: str):
         account = db.query(Account).filter(Account.id == id).first()

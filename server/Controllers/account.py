@@ -21,15 +21,16 @@ def create_account(body: Account_Dto, db: Session = Depends(get_db)):
 
     return account
 
-@router.get("/accounts/{user_id}/{type}", response_model=List[Account_Dto])
-def get_accounts(user_id, db: Session = Depends(get_db)):
-    accounts = service.get_accounts(db, type, user_id)
+@router.get("/accounts/{user_id}/{account_type}", response_model=List[Account_Dto])
+def get_accounts(
+    user_id: str,
+    account_type: str,
+    db: Session = Depends(get_db)
+):
+    accounts = service.get_accounts(db, account_type, user_id)
 
     if accounts is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found or no accounts exist"
-        )
+        return []
 
     return accounts
 

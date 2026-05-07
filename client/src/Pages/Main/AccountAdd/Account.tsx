@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Logo from "../../Shared/Logo/Logo";
 import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar";
-import './AccountAdd.css';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -40,8 +39,10 @@ const Account = () => {
         try {
             await axios.post(`${apiUrl}/accounts`, 
               formData
-            );            
-          } 
+            );  
+            handleClear()
+            navigate("/accounts")
+        } 
         
         catch (err) {
             console.error("Account could not be added:", err);
