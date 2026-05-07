@@ -1,15 +1,15 @@
-.balances {
+.balances-box {
     display: flex;
-    max-width: 100%;
+    width: 80%;
     flex-direction: column;
-    padding: 1rem;
-    margin: 0;
-    margin-top: 7rem;
-    margin-left: 4rem;
-    margin-right: 4rem;
+    padding: 2rem;
+    margin: 4rem auto 0rem auto;
+    margin-top: 5rem;
+    contain: content;
 }
 
-.balances .span{
+
+.balances-box .span{
     gap: 5rem;
 }
 

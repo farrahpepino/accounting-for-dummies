@@ -1,12 +1,3 @@
-.delete {
-    height: 15vh;
-}
-
-.settings {
-    margin-top: 7rem;
-    height: 27vh;
-}
-
 .settings-box {
     display: flex;
     flex-direction: column;
@@ -14,7 +5,16 @@
     padding: 2rem;
     position: relative;
     margin: 4rem auto 0 auto; 
-    contain: strict;
+    contain: content;
+}
+
+.delete {
+    height: 15vh;
+}
+
+.settings {
+    margin-top: 5rem;
+    height: 27vh;
 }
 
 .settings-container {
@@ -22,5 +22,4 @@
     display: flex;
     flex-direction: column;
     width: calc(100vw - 19.0625rem);
-    position: fixed;
 }

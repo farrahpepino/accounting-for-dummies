@@ -70,7 +70,9 @@ const AccountEdit = () => {
                         </div>
                     </form>
 
-                    <div className="span buttons">
+                    <br /><br /><br />
+
+                    <div className="span set-buttons">
                         <button className="red-btn btn">Clear</button>
                         <button className="green-btn btn">Add</button>
                     </div>

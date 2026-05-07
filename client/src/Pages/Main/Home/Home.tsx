@@ -9,7 +9,7 @@ const Home = () => {
         <Sidebar />
 
         <div className="container">
-            <div className="balances border">
+            <div className="balances-box border">
               <div className="bold lg">Balances</div>
               <br />
               <div>

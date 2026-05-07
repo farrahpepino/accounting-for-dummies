@@ -26,6 +26,7 @@
   margin: 4rem auto 0 auto; 
   margin-top: 7rem;
   bottom: 2rem;
+  contain: content;
 }
 
 .btn {
@@ -49,19 +50,11 @@ body {
   margin: 0;
 }
 
-.buttons {
-  position: fixed;
-  left: 50%;
-  transform: translate(-50%);
-  bottom: 8%;
-}
-
 .container {
   margin-left: 19.0625rem;
   display: flex;
   flex-direction: column;
   width: calc(100vw - 19.0625rem);
-  position: fixed;
 }
 
 form {
@@ -132,6 +125,12 @@ input {
 .red-btn {
   background-color: #CD0000;  
 }
+
+.set-buttons{
+  display: flex;
+  justify-content: center;
+}
+
 
 .sm {
   font-size: 1rem;
