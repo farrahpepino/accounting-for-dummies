@@ -38,7 +38,7 @@ const Settings = () => {
                         <div className="ml-2">To delete account, type your email.</div>
                         <br />
                         <form className="span ml-2">
-                            <input type="email" title="Email" name="email" id="email" className="border" />
+                            <input type="email" title="Email" name="email" id="email" className="border input" />
                             <button className="btn red-btn">Delete</button>
                         </form>
                     </div>

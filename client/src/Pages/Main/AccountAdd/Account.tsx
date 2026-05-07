@@ -131,7 +131,7 @@ const Account = () => {
                                     id="bank"
                                     value={formData.bank}
                                     onChange={handleChange}
-                                    className="border ml-6 mt"
+                                    className="border ml-6 mt input"
                                 />
                             </div>
 
@@ -149,7 +149,7 @@ const Account = () => {
                                     name="balance"
                                     value={formData.balance}
                                     onChange={handleChange}
-                                    className="border ml-6 mt"
+                                    className="border ml-6 mt input"
                                 />
                             </div>
 
@@ -167,7 +167,7 @@ const Account = () => {
                                     name="date"
                                     value={formData.date}
                                     onChange={handleChange}
-                                    className="border ml-6 mt"
+                                    className="border ml-6 mt input"
                                 />
                             </div>
 
@@ -187,7 +187,7 @@ const Account = () => {
                                     maxLength={4}
                                     value={formData.last_digits}
                                     onChange={handleChange}
-                                    className="border ml-6 mt"
+                                    className="border ml-6 mt input"
                                 />
                             </div>
 

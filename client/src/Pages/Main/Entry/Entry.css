@@ -1,0 +1,31 @@
+.digits-parent {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.digits-child {
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    width: 4.5rem;
+    background-color: white;
+
+
+    padding: 0.5rem;
+    max-height: 6rem;
+    z-index: 10;
+
+    overflow-y: scroll;
+    text-align: center;
+
+    display: none;
+
+}
+
+.digits-parent:hover .digits-child {
+    display: flex;
+    flex-direction: column;
+}

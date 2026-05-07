@@ -74,7 +74,7 @@ form {
   display: none;
 }
 
-input {
+.input {
   width: 16.5rem;
   height: 30px;
   padding: 0px 10px;
