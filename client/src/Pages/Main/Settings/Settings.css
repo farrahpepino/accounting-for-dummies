@@ -1,12 +1,13 @@
-.container {
-    margin-left: 19.0625rem;
-    display: flex;
-    flex-direction: column;
-    width: calc(100vw - 19.0625rem);
-    position: fixed;
+.delete {
+    height: 15vh;
 }
 
-.box {
+.settings {
+    margin-top: 7rem;
+    height: 27vh;
+}
+
+.settings-box {
     display: flex;
     flex-direction: column;
     width: 80%;
@@ -16,23 +17,10 @@
     contain: strict;
 }
 
-.settings {
-    margin-top: 7rem;
-    height: 27vh;
-}
-
-.delete {
-    height: 15vh;
-}
-
-.ml-2 {
-    margin-left: 2rem;
-}
-
-.mr-5 {
-    margin-right: 5px;
-}
-
-input {
-    width: 16.5rem;
+.settings-container {
+    margin-left: 19.0625rem;
+    display: flex;
+    flex-direction: column;
+    width: calc(100vw - 19.0625rem);
+    position: fixed;
 }

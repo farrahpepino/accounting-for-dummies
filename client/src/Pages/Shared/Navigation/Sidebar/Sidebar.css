@@ -1,12 +1,17 @@
-.Sidebar {
+.active {
+    font-weight: bold;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+    padding: 15px 0px;
     display: flex;
-    flex-direction: column;
-    width: 15rem;
-    border-right: 1px solid #D9D9D9;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    height: 100vh;
+}
+
+.footer {
     position: fixed;
+    bottom: 2rem;
 }
 
 .header {
@@ -23,18 +28,13 @@
     top: 15rem;
 }
 
-.footer {
-    position: fixed;
-    bottom: 2rem;
-}
-
-.active {
-    font-weight: bold;
-}
-
-a {
-    color: black;
-    text-decoration: none;
-    padding: 15px 0px;
+.Sidebar {
     display: flex;
+    flex-direction: column;
+    width: 15rem;
+    border-right: 1px solid #D9D9D9;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    height: 100vh;
+    position: fixed;
 }

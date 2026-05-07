@@ -14,8 +14,8 @@ const Settings = () => {
             <Logo />
             <Sidebar />
     
-            <div className='container'>
-                <div className='box border settings'>
+            <div className='settings-container'>
+                <div className='settings-box border settings'>
                     <div className="bold lg">Settings</div>
                     <br /><br /><br />
 
@@ -31,7 +31,7 @@ const Settings = () => {
                         </div>
                     </div>
                 </div>
-                <div className='box border delete'>
+                <div className='settings-box border delete'>
                     <div className="bold lg">Delete Account</div>
                     <br />
                     <div>

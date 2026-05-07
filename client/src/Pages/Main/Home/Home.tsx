@@ -36,7 +36,7 @@ const Home = () => {
             <br />
             <br />
 
-            <button className="transparent underline btn">
+            <button className="transparent underline black ml-4 w-11">
                 See past monthly statements
             </button>
         </div>
