@@ -68,7 +68,7 @@ const Account = () => {
                             <div>
                                 <strong>Last 4 digits</strong>
                                 <br />
-                                <input type="text" title="entry-note" className="border ml-6 mt"/>
+                                <input type="text" title="note" name="note" id="note" className="border ml-6 mt"/>
                             </div>
                         </div>
                     </form>

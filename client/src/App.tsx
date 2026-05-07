@@ -1,4 +1,5 @@
 import './App.css';
+
 import ProtectedRoutes from './Utils/ProtectedRoutes';
 
 import { Routes, Route } from 'react-router-dom';

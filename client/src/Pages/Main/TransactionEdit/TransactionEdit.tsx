@@ -91,7 +91,7 @@ const TransactionEdit = () => {
                             <br />
                             <div className="span">
                                 <strong>Note</strong>
-                                <input type="text" title="entry-note" className="border ml-2"/>
+                                <input type="text" title="note" name="note" id="note" className="border ml-2"/>
                             </div>
                         </div>
                     </form>
