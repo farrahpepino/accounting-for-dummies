@@ -83,7 +83,7 @@ table tr th {
 
 .types-child {
     position: absolute;
-    top: 100%;
+    top: calc(100% - 2px);
     left: 0;
     margin-top: 3px;
 

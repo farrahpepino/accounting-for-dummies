@@ -263,7 +263,7 @@ const Entry = () => {
                             <div className="span">
                                 <div className="span">
                                     
-                                    <strong>Source account</strong>
+                                    <strong>Source</strong>
                                    
                                     <div className="span ml-2 mr-2 digits-parent">
                             
@@ -306,7 +306,7 @@ const Entry = () => {
 
                                 {isTransfer && (
                                     <div className="span">
-                                        <strong>Destination account</strong>
+                                        <strong>Destination</strong>
 
                                         <div className="span ml-2 mr-2 digits-parent">
 

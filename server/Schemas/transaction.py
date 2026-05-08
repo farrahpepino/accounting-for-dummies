@@ -15,7 +15,7 @@ class Transaction(Base):
     )
     type = Column(String(10), index=True)
     
-    acc_1 = Column(String(36), ForeignKey("accounts.id", ondelete="CASCADE"))
+    acc_1 = Column(String(36), ForeignKey("accounts.id", ondelete="SET NULL"))
     
     acc_1_r = relationship("Account", foreign_keys=[acc_1])
     acc_2 = Column(

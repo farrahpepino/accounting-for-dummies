@@ -7,7 +7,7 @@
 
 .digits-child {
     position: absolute;
-    top: 100%;
+    top: calc(100% - 2px);
     left: 85%;
 
     width: 85px;

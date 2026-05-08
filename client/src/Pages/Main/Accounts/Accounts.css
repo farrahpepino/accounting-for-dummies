@@ -7,7 +7,7 @@
 
 .account-child {
     position: absolute;
-    top: 100%;
+    top: calc(100% - 2px);
     left: 10rem;
 
     width: auto;
