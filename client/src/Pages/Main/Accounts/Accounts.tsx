@@ -83,7 +83,8 @@ const Accounts = () => {
                         </div>
                          {(checkingAccounts.length===0 && creditAccounts.length===0 && savingsAccounts.length===0) ? 
                         <div className="sub center">
-                            No accounts saved
+                            <br /><br /><br />
+                            Add your first account
                         </div> :
                         <div>
                         <br /><br /><br />

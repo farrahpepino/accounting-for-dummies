@@ -203,6 +203,10 @@ const Entry = () => {
 
                     <br /><br /><br />
 
+                    {
+                        accounts.length===0 ? 
+                        <div className="center sub">Make sure to add an account first</div> :
+
                     <form onSubmit={handleSubmit}>
 
                         <div>
@@ -249,9 +253,15 @@ const Entry = () => {
 
                             <div className="span">
                                 <div className="span">
-                                    <strong>From</strong>
-
+                                    
+                                    <strong>Source account</strong>
+                                   
                                     <div className="span ml-2 mr-2 digits-parent">
+                                    {
+                                        accounts.length===0 ? 
+                                        <div>No accounts saved</div>
+                                        :
+                                        <span>
 
                                         <span className="gap-5">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#938D8D">
@@ -266,9 +276,10 @@ const Entry = () => {
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
                                             <path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/>
                                         </svg>
-
-                                        <div className="border digits-child">
-                                            {accounts.map((acc) => (
+                                        </span>
+                                    }
+                                    
+                                        <div className={`${accounts.length===0 ? "hidden" : "border digits-child"}`}>                                            {accounts.map((acc) => (
                                                 <div
                                                     key={acc.id}
                                                     className="pointer"
@@ -284,13 +295,15 @@ const Entry = () => {
                                                 </div>
                                             ))}
                                         </div>
+                                
 
                                     </div>
                                 </div>
+                                
 
                                 {isTransfer && (
                                     <div className="span">
-                                        <strong>To</strong>
+                                        <strong>Destination account</strong>
 
                                         <div className="span ml-2 mr-2 digits-parent">
 
@@ -406,7 +419,7 @@ const Entry = () => {
                         </div>
 
                     </form>
-
+}
                 </div>
             </div>
         </div>
