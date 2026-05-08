@@ -2,10 +2,38 @@ import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar"
 import './Home.css'
 import Logo from "../../Shared/Logo/Logo"
 import { useNavigate } from "react-router-dom"
+import { GetBalance } from "../../../Services/getBalance"
+import { useState, useEffect } from "react"
 
 const Home = () => {
 
   const navigate = useNavigate();
+  const types = ["Checking", "Credit", "Savings"]
+  const [balances, setBalances] = useState({
+    Checking: 0,
+    Credit: 0,
+    Savings: 0
+  });
+
+
+  useEffect(() => {
+
+    const fetchBalances = async () => {
+
+      const checkingBalance = await GetBalance("Checking");
+      const creditBalance = await GetBalance("Credit");
+      const savingsBalance = await GetBalance("Savings");
+
+      setBalances({
+        Checking: checkingBalance,
+        Credit: creditBalance,
+        Savings: savingsBalance
+      });
+    };
+
+    fetchBalances();
+
+  }, []);
 
   return (
     <div className="Home">
@@ -16,12 +44,28 @@ const Home = () => {
             <div className="balances-box border">
               <div className="bold lg">Balances</div>
               <br />
-              <div>
-                <div  className="span">
-                  <div className="bold">Savings</div>
-                  <div><span className="sub">$</span> 10,329.00</div>
+              {types.map((type) => (
+              <div key={type}>
+
+                <div className="balance-span">
+                  <div className="bold">{type}</div>
+                  <div>
+                    {
+                      balances[type as keyof typeof balances]
+                        .toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        })
+                    }
+                    <span className="sub"> USD</span>
+
+
+                  </div>
+
                 </div>
               </div>
+            ))}
+   
             </div>
 
             <br />

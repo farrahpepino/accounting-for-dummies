@@ -4,7 +4,7 @@ export interface AccountDto  {
     type: string
     bank: string
     balance: number
-    date: Date | null
+    date: Date
     last_digits: number
 }
 

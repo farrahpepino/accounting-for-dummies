@@ -22,24 +22,24 @@ const Entry = () => {
     const accounts = [
         ...checkingAccounts,
         ...savingsAccounts,
-        ...creditAccounts,
-        {
-            id: "n/a",
-            user_id: "n/a",
-            type: "n/a",
-            bank: "n/a",
-            balance: 0,
-            date: null,
-            last_digits: 0
-        }
+        ...creditAccounts
     ];
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<{
+        user_id: string;
+        date: string;
+        type: string;
+        from_account: string;
+        to_account: string | null;
+        category: string;
+        amount: string;
+        note: string;
+    }>({
         user_id: user.id,
         date: new Date().toISOString().split("T")[0],
         type: "",
         from_account: "",
-        to_account: "",
+        to_account: null,
         category: "",
         amount: "",
         note: ""
@@ -90,7 +90,7 @@ const Entry = () => {
         setFormData((prev) => ({
             ...prev,
             type,
-            to_account: type === "Transfer" ? "" : "n/a"
+            to_account: type === "Transfer" ? formData.to_account : null
         }));
 
         if (type !== "Transfer") {
@@ -113,7 +113,7 @@ const Entry = () => {
         const toAccount =
             formData.type === "Transfer"
                 ? formData.to_account
-                : "n/a";
+                : "";
 
         try {
             await axios.post(`${apiUrl}/transactions`, {
@@ -127,6 +127,46 @@ const Entry = () => {
                 note: formData.note
             });
 
+            const from_account = await axios.get(`${apiUrl}/accounts/${formData.from_account}`)
+
+            if (formData.type=="Expense"){
+                if (from_account.data.type==="Credit"){
+                    from_account.data.balance = from_account.data.balance + parseFloat(formData.amount)
+                }
+                else{
+                    from_account.data.balance = from_account.data.balance - parseFloat(formData.amount)
+                }
+            }
+            else if (formData.type=="Income"){
+                from_account.data.balance = from_account.data.balance + parseFloat(formData.amount)
+            }
+
+            else {
+                const to_account = await axios.get(`${apiUrl}/accounts/${formData.to_account}`)
+
+                if (from_account.data.type !== "Credit"){
+                    from_account.data.balance = from_account.data.balance - parseFloat(formData.amount)
+
+                }
+
+                else {
+                    from_account.data.balance = from_account.data.balance + parseFloat(formData.amount)
+                }
+
+                if(to_account.data.type == "Checking" || to_account.data.type=="Savings"){
+                    to_account.data.balance = to_account.data.balance + parseFloat(formData.amount)
+                }
+                else if (to_account.data.type=="Credit"){
+
+                    to_account.data.balance = to_account.data.balance - parseFloat(formData.amount)
+                }
+
+                await axios.patch(`${apiUrl}/accounts/${formData.to_account}/${to_account.data.balance}`)
+
+
+            }
+
+            await axios.patch(`${apiUrl}/accounts/${formData.from_account}/${from_account.data.balance}`)
             handleClear();
             navigate("/transactions");
 
@@ -144,7 +184,7 @@ const Entry = () => {
             date: new Date().toISOString().split("T")[0],
             type: "",
             from_account: "",
-            to_account: "",
+            to_account: null,
             category: "",
             amount: "",
             note: ""
@@ -219,7 +259,7 @@ const Entry = () => {
                                             </svg>
 
                                             {selectedFrom
-                                                ? (selectedFrom.last_digits === 0 ? "N/A" : selectedFrom.last_digits)
+                                                ? selectedFrom.last_digits
                                                 : "Select"}
                                         </span>
 
@@ -240,7 +280,7 @@ const Entry = () => {
                                                         }));
                                                     }}
                                                 >
-                                                    {acc.last_digits === 0 ? "N/A" : acc.last_digits}
+                                                    {acc.last_digits}
                                                 </div>
                                             ))}
                                         </div>
@@ -260,7 +300,7 @@ const Entry = () => {
                                                 </svg>
 
                                                 {selectedTo
-                                                    ? (selectedTo.last_digits === 0 ? "N/A" : selectedTo.last_digits)
+                                                    ? selectedTo.last_digits
                                                     : "Select"}
                                             </span>
 
@@ -281,7 +321,7 @@ const Entry = () => {
                                                             }));
                                                         }}
                                                     >
-                                                        {acc.last_digits === 0 ? "N/A" : acc.last_digits}
+                                                        {acc.last_digits}
                                                     </div>
                                                 ))}
                                             </div>
@@ -294,7 +334,7 @@ const Entry = () => {
 
                             <br />
 
-                            {formData.type !== "Transfer" && (
+                            {(formData.type !== "Transfer" && formData.type !== "Income") && (
                             <div>
                                 <strong>Category</strong>
 

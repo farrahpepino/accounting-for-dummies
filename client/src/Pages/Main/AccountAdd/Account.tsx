@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Account = () => {
-    const apiUrl = import.meta.env.VITE_API_URL; 
+    const apiUrl = import.meta.env.VITE_API_URL;
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const navigate = useNavigate();
 
@@ -13,17 +13,19 @@ const Account = () => {
         type: "",
         user_id: user?.id,
         bank: "",
-        balance: "",
+        balance: 0,
         date: new Date().toISOString().split("T")[0],
         last_digits: ""
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>)  => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
         setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: name === "balance"
+                ? parseFloat(value) || 0
+                : value
         }));
     };
 
@@ -36,14 +38,28 @@ const Account = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
         try {
-            await axios.post(`${apiUrl}/accounts`, 
-              formData
-            );  
-            handleClear()
-            navigate("/accounts")
-        } 
-        
+            const res = await axios.post(`${apiUrl}/accounts`,
+                formData
+            );
+
+            await axios.post(`${apiUrl}/transactions`, {
+                user_id: user.id,
+                date: formData.date,
+                type: formData.type==="Credit" ? "Expense": "Income",
+                from_bank: res.data.id,
+                to_bank: "",
+                category: "",
+                amount: formData.balance,
+                note: ""
+            });
+          
+
+            handleClear();
+            navigate("/accounts");
+        }
+
         catch (err) {
             console.error("Account could not be added:", err);
         }
@@ -54,7 +70,7 @@ const Account = () => {
             user_id: "",
             type: "",
             bank: "",
-            balance: "",
+            balance: 0,
             date: new Date().toISOString().split("T")[0],
             last_digits: ""
         });
@@ -64,25 +80,36 @@ const Account = () => {
         <div>
             <Logo />
             <Sidebar />
-    
+
             <div className='container'>
                 <div className='box border'>
+
                     <div className="span">
-                        <button title="back" onClick={()=> navigate("/accounts")} className="transparent">
+
+                        <button
+                            title="back"
+                            onClick={() => navigate("/accounts")}
+                            className="transparent"
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
-                                <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/>
+                                <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z" />
                             </svg>
                         </button>
 
                         <div className="bold lg">Add Account</div>
+
                     </div>
 
-                    <br /><br /><br />
+                    <br />
+                    <br />
+                    <br />
 
                     <form onSubmit={handleSubmit}>
+
                         <div>
 
                             <div>
+
                                 <strong>Type</strong>
 
                                 <br />
@@ -115,12 +142,14 @@ const Account = () => {
                                     </div>
 
                                 </div>
+
                             </div>
 
                             <br />
                             <br />
 
                             <div>
+
                                 <strong>Bank</strong>
 
                                 <br />
@@ -134,12 +163,14 @@ const Account = () => {
                                     onChange={handleChange}
                                     className="border ml-6 mt input"
                                 />
+
                             </div>
 
                             <br />
                             <br />
 
                             <div>
+
                                 <strong>Balance</strong>
 
                                 <br />
@@ -147,35 +178,40 @@ const Account = () => {
                                 <input
                                     title="balance"
                                     type="number"
+                                    step="0.01"
                                     name="balance"
                                     value={formData.balance}
                                     onChange={handleChange}
                                     className="border ml-6 mt input"
                                 />
+
                             </div>
 
                             <br />
                             <br />
 
                             <div>
+
                                 <strong>Date</strong>
 
                                 <br />
 
                                 <input
-                                    title = "date"
+                                    title="date"
                                     type="date"
                                     name="date"
                                     value={formData.date}
                                     onChange={handleChange}
                                     className="border ml-6 mt input"
                                 />
+
                             </div>
 
                             <br />
                             <br />
 
                             <div>
+
                                 <strong>Last 4 digits</strong>
 
                                 <br />
@@ -190,13 +226,17 @@ const Account = () => {
                                     onChange={handleChange}
                                     className="border ml-6 mt input"
                                 />
+
                             </div>
 
                         </div>
 
-                        <br /><br /><br />
+                        <br />
+                        <br />
+                        <br />
 
                         <div className="span set-buttons">
+
                             <button
                                 type="button"
                                 className="red-btn btn"
@@ -211,9 +251,11 @@ const Account = () => {
                             >
                                 Add
                             </button>
+
                         </div>
 
                     </form>
+
                 </div>
             </div>
         </div>

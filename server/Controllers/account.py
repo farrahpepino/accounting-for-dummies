@@ -34,6 +34,21 @@ def get_accounts(
 
     return accounts
 
+@router.get("/accounts/{id}", response_model=Account_Dto)
+def get_account(
+    id: str,
+    db: Session = Depends(get_db)
+):
+    account = service.get_account(db, id)
+
+    if not account:
+        return 
+
+    return account
+
+@router.patch("/accounts/{id}/{balance}")
+def update_name(id: str, balance: float, db: Session = Depends(get_db)):
+    return service.update_balance(db, balance, id)
 
 @router.delete("/accounts/{id}")
 def delere_account(id, db: Session = Depends(get_db)):

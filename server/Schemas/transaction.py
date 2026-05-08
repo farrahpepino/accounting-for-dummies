@@ -15,10 +15,10 @@ class Transaction(Base):
     )
     type = Column(String(10), index=True)
     from_bank = Column(String(36), ForeignKey("accounts.id", ondelete="CASCADE"))
-    to_bank = Column(String(36))
-    category = Column(String(10))
-    amount = Column(Float)
+    to_bank = Column(String(36), nullable=True)
+    category = Column(String(10), nullable=True)
+    amount = Column(Float, nullable=False)
     date = Column(Date)    
-    note = Column(String(360))
+    note = Column(String(360), nullable=True)
     
     

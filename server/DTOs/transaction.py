@@ -8,7 +8,7 @@ class Transaction_Dto(BaseModel):
     type: str
     from_bank: str
     to_bank: Optional[str] = None
-    category: str 
+    category: Optional[str] = None
     amount: float
     date: datetime
     note: Optional[str] = None

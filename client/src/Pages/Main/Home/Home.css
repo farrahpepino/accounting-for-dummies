@@ -26,3 +26,11 @@
 .tracker .span{
     gap: 1rem;
 }
+
+.balance-span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 20rem;
+    justify-content: space-between;
+}

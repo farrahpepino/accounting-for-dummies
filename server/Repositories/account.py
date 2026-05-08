@@ -17,6 +17,24 @@ class Account_Repository:
                 .filter(Account.user_id == user_id)\
                 .filter(Account.type == account_type)\
                 .all()
+                
+    def get_account(self, db:Session, id: str):
+        return db.query(Account)\
+                .filter(Account.id == id)\
+                .first()
+                
+    def update_balance(self, db:Session, balance:float, id: str):
+        account = self.get_account(db, id)
+        
+        if not account:
+            return None  
+        
+        account.balance = balance
+        
+        db.commit()
+        db.refresh(account)
+        
+        return account.balance
     
     def delete_account(self, db:Session, id: str):
         account = db.query(Account).filter(Account.id == id).first()
@@ -28,3 +46,5 @@ class Account_Repository:
         db.commit()
         
         return True 
+    
+    

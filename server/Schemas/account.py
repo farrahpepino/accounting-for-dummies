@@ -16,7 +16,7 @@ class Account(Base):
     )
     type = Column(String(10), index=True)
     bank = Column(String(255), index=True)
-    balance = Column(Float)
+    balance = Column(Float, nullable=False)
     date = Column(DateTime, default=datetime.now)
     last_digits = Column(Integer)
     
