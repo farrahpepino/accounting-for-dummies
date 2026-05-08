@@ -50,6 +50,16 @@ body {
   margin: 0;
 }
 
+.center{
+  margin: 0 auto;
+}
+
+.v-center {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+}
+
 .container {
   margin-left: 19.0625rem;
   display: flex;

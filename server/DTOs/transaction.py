@@ -6,8 +6,8 @@ class Transaction_Dto(BaseModel):
     id: Optional[str] = None
     user_id: str
     type: str
-    from_bank: str
-    to_bank: Optional[str] = None
+    source_account: str
+    destination_account: Optional[str] = None
     category: Optional[str] = None
     amount: float
     date: datetime

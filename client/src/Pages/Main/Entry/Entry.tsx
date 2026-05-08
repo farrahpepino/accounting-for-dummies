@@ -29,8 +29,8 @@ const Entry = () => {
         user_id: string;
         date: string;
         type: string;
-        from_account: string;
-        to_account: string | null;
+        source_account: string;
+        destination_account: string | null;
         category: string;
         amount: string;
         note: string;
@@ -38,8 +38,8 @@ const Entry = () => {
         user_id: user.id,
         date: new Date().toISOString().split("T")[0],
         type: "",
-        from_account: "",
-        to_account: null,
+        source_account: "",
+        destination_account: null,
         category: "",
         amount: "",
         note: ""
@@ -90,7 +90,7 @@ const Entry = () => {
         setFormData((prev) => ({
             ...prev,
             type,
-            to_account: type === "Transfer" ? formData.to_account : null
+            destination_account: type === "Transfer" ? formData.destination_account : null
         }));
 
         if (type !== "Transfer") {
@@ -108,11 +108,11 @@ const Entry = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!formData.from_account || !formData.type) return;
+        if (!formData.source_account || !formData.type) return;
 
-        const toAccount =
+        const destinationAccount =
             formData.type === "Transfer"
-                ? formData.to_account
+                ? formData.destination_account
                 : "";
 
         try {
@@ -120,53 +120,53 @@ const Entry = () => {
                 user_id: formData.user_id,
                 date: formData.date,
                 type: formData.type,
-                from_bank: formData.from_account,
-                to_bank: toAccount,
+                source_account: formData.source_account,
+                destination_account: destinationAccount,
                 category: formData.category,
                 amount: parseFloat(formData.amount),
                 note: formData.note
             });
 
-            const from_account = await axios.get(`${apiUrl}/accounts/${formData.from_account}`)
+            const sourceAccount = await axios.get(`${apiUrl}/accounts/${formData.source_account}`)
 
             if (formData.type=="Expense"){
-                if (from_account.data.type==="Credit"){
-                    from_account.data.balance = from_account.data.balance + parseFloat(formData.amount)
+                if (sourceAccount.data.type==="Credit"){
+                    sourceAccount.data.balance = sourceAccount.data.balance + parseFloat(formData.amount)
                 }
                 else{
-                    from_account.data.balance = from_account.data.balance - parseFloat(formData.amount)
+                    sourceAccount.data.balance = sourceAccount.data.balance - parseFloat(formData.amount)
                 }
             }
             else if (formData.type=="Income"){
-                from_account.data.balance = from_account.data.balance + parseFloat(formData.amount)
+                sourceAccount.data.balance = sourceAccount.data.balance + parseFloat(formData.amount)
             }
 
             else {
-                const to_account = await axios.get(`${apiUrl}/accounts/${formData.to_account}`)
+                const destinationAccount = await axios.get(`${apiUrl}/accounts/${formData.destination_account}`)
 
-                if (from_account.data.type !== "Credit"){
-                    from_account.data.balance = from_account.data.balance - parseFloat(formData.amount)
+                if (sourceAccount.data.type !== "Credit"){
+                    sourceAccount.data.balance = sourceAccount.data.balance - parseFloat(formData.amount)
 
                 }
 
                 else {
-                    from_account.data.balance = from_account.data.balance + parseFloat(formData.amount)
+                    sourceAccount.data.balance = sourceAccount.data.balance + parseFloat(formData.amount)
                 }
 
-                if(to_account.data.type == "Checking" || to_account.data.type=="Savings"){
-                    to_account.data.balance = to_account.data.balance + parseFloat(formData.amount)
+                if(destinationAccount.data.type == "Checking" || destinationAccount.data.type=="Savings"){
+                    destinationAccount.data.balance = destinationAccount.data.balance + parseFloat(formData.amount)
                 }
-                else if (to_account.data.type=="Credit"){
+                else if (destinationAccount.data.type=="Credit"){
 
-                    to_account.data.balance = to_account.data.balance - parseFloat(formData.amount)
+                    destinationAccount.data.balance = destinationAccount.data.balance - parseFloat(formData.amount)
                 }
 
-                await axios.patch(`${apiUrl}/accounts/${formData.to_account}/${to_account.data.balance}`)
+                await axios.patch(`${apiUrl}/accounts/${formData.destination_account}/${destinationAccount.data.balance}`)
 
 
             }
 
-            await axios.patch(`${apiUrl}/accounts/${formData.from_account}/${from_account.data.balance}`)
+            await axios.patch(`${apiUrl}/accounts/${formData.source_account}/${sourceAccount.data.balance}`)
             handleClear();
             navigate("/transactions");
 
@@ -183,8 +183,8 @@ const Entry = () => {
             user_id: user.id,
             date: new Date().toISOString().split("T")[0],
             type: "",
-            from_account: "",
-            to_account: null,
+            source_account: "",
+            destination_account: null,
             category: "",
             amount: "",
             note: ""
@@ -276,7 +276,7 @@ const Entry = () => {
                                                         setSelectedFrom(acc);
                                                         setFormData((prev) => ({
                                                             ...prev,
-                                                            from_account: acc.id!
+                                                            source_account: acc.id!
                                                         }));
                                                     }}
                                                 >

@@ -48,9 +48,9 @@ const Account = () => {
                 user_id: user.id,
                 date: formData.date,
                 type: formData.type==="Credit" ? "Expense": "Income",
-                from_bank: res.data.id,
-                to_bank: "",
-                category: "",
+                source_account: res.data.id,
+                destination_account: null,
+                category: null,
                 amount: formData.balance,
                 note: ""
             });

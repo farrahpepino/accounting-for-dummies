@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Float, Date, ForeignKey
 from database import Base
 import uuid
-
+from sqlalchemy.orm import relationship
 
 class Transaction(Base):
     __tablename__ = "transactions"
@@ -14,8 +14,13 @@ class Transaction(Base):
         nullable=False
     )
     type = Column(String(10), index=True)
-    from_bank = Column(String(36), ForeignKey("accounts.id", ondelete="CASCADE"))
-    to_bank = Column(String(36), nullable=True)
+    
+    source_account = Column(String(36), ForeignKey("accounts.id", ondelete="CASCADE"))
+    destination_account = Column(String(36), ForeignKey("accounts.id"), nullable=True)
+    
+    source_account_r = relationship("Account", foreign_keys=[source_account])
+    destination_account_r = relationship("Account", foreign_keys=[destination_account])
+    
     category = Column(String(10), nullable=True)
     amount = Column(Float, nullable=False)
     date = Column(Date)    

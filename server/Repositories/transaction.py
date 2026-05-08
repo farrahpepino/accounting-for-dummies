@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from Schemas.transaction import Transaction
 
 from DTOs.transaction import Transaction_Dto
@@ -14,8 +14,12 @@ class Transaction_Repository:
     
     def get_transactions(self, db:Session, type: str, user_id: str):
         return db.query(Transaction)\
-                .filter(Transaction.type == type)\
                 .filter(Transaction.user_id == user_id)\
+                .filter(Transaction.source_account_r.has(type=type))\
+                .options(
+                    joinedload(Transaction.source_account_r),
+                    joinedload(Transaction.destination_account_r)
+                )\
                 .all()
     
     def delete_transaction(self, db:Session, id: str):

@@ -51,7 +51,7 @@ def update_name(id: str, balance: float, db: Session = Depends(get_db)):
     return service.update_balance(db, balance, id)
 
 @router.delete("/accounts/{id}")
-def delere_account(id, db: Session = Depends(get_db)):
+def delete_account(id, db: Session = Depends(get_db)):
     deleted = service.delete_account(db, id)
     
     print(id)
