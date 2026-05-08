@@ -14,7 +14,7 @@ const Account = () => {
         user_id: user?.id,
         bank: "",
         balance: 0,
-        date: new Date().toISOString().split("T")[0],
+        date: new Date().toISOString(),
         last_digits: ""
     });
 
@@ -48,10 +48,11 @@ const Account = () => {
                 user_id: user.id,
                 date: formData.date,
                 type: formData.type==="Credit" ? "Expense": "Income",
-                source_account: res.data.id,
-                destination_account: null,
+                acc_1: res.data.id,
+                acc_2: null,
                 category: null,
                 amount: formData.balance,
+                balance: formData.balance,
                 note: ""
             });
           
@@ -71,7 +72,7 @@ const Account = () => {
             type: "",
             bank: "",
             balance: 0,
-            date: new Date().toISOString().split("T")[0],
+            date: new Date().toISOString(),
             last_digits: ""
         });
     };

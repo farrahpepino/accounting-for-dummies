@@ -21,10 +21,10 @@ def create_transaction(body: Transaction_Dto, db: Session = Depends(get_db)):
         
     return transaction
 
-@router.get("/transactions/{user_id}/{type}", response_model=List[Transaction_Dto])
-def get_transactions(user_id, type, db: Session = Depends(get_db)):
-    
-    transactions = service.get_transactions(db, type, user_id)
+@router.get("/transactions/{user_id}/{type}/{page_num}")
+def get_transactions(user_id, type, page_num, db: Session = Depends(get_db)):
+    page_num = int(page_num) 
+    transactions = service.get_transactions(db, type, user_id, page_num)
 
     if transactions is None:
         raise HTTPException(

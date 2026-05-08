@@ -12,39 +12,43 @@ class Transaction_Repository:
         db.refresh(transaction)
         return transaction
     
-    # def get_transactions(self, db:Session, type: str, user_id: str):
-    #     return db.query(Transaction)\
-    #             .filter(Transaction.user_id == user_id)\
-    #             .filter(Transaction.source_account_r.has(type=type))\
-    #             .options(
-    #                 joinedload(Transaction.source_account_r),
-    #                 joinedload(Transaction.destination_account_r)
-    #             )\
-    #             .all()
-                
     def get_transactions(
     self,
     db: Session,
     type: str,
     user_id: str,
-    page: int = 1,
+    page_num: int = 1,
     page_size: int = 7
     ):
-        offset = (page - 1) * page_size
+            
+        offset = (page_num - 1) * page_size
 
-        return (
+        query = (
             db.query(Transaction)
             .filter(Transaction.user_id == user_id)
-            .filter(Transaction.source_account_r.has(type=type))
+            .filter(Transaction.acc_1_r.has(type=type))
+        )
+
+        total = query.count()
+
+        transactions = (
+            query
             .options(
-                joinedload(Transaction.source_account_r),
-                joinedload(Transaction.destination_account_r)
+                joinedload(Transaction.acc_1_r),
+                joinedload(Transaction.acc_2_r)
             )
             .order_by(Transaction.date.desc()) 
-            .limit(page_size)
             .offset(offset)
+            .limit(page_size)
             .all()
         )
+
+        total_pages = (total + page_size - 1) // page_size
+
+        return {
+            "transactions": transactions,
+            "total_pages": total_pages
+        }
     
     def delete_transaction(self, db:Session, id: str):
         transaction = db.query(Transaction).filter(Transaction.id == id).first()

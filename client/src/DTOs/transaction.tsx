@@ -3,10 +3,11 @@ export interface TransactionDto {
     id?: string 
     user_id: string
     type: string
-    source_account: AccountDto
-    destination_account: AccountDto
+    acc_1: AccountDto
+    acc_2: AccountDto
     category: string
     amount: number
+    balance: number
     date: Date
     note: string
 }

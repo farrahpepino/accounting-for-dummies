@@ -6,10 +6,11 @@ class Transaction_Dto(BaseModel):
     id: Optional[str] = None
     user_id: str
     type: str
-    source_account: str
-    destination_account: Optional[str] = None
+    acc_1: str
+    acc_2: Optional[str] = None
     category: Optional[str] = None
     amount: float
+    balance: float
     date: datetime
     note: Optional[str] = None
     

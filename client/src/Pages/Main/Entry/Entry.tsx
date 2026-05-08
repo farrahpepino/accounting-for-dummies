@@ -29,17 +29,17 @@ const Entry = () => {
         user_id: string;
         date: string;
         type: string;
-        source_account: string;
-        destination_account: string | null;
+        acc_1: string;
+        acc_2: string | null;
         category: string;
         amount: string;
         note: string;
     }>({
         user_id: user.id,
-        date: new Date().toISOString().split("T")[0],
+        date: new Date().toISOString(),
         type: "",
-        source_account: "",
-        destination_account: null,
+        acc_1: "",
+        acc_2: null,
         category: "",
         amount: "",
         note: ""
@@ -90,7 +90,7 @@ const Entry = () => {
         setFormData((prev) => ({
             ...prev,
             type,
-            destination_account: type === "Transfer" ? formData.destination_account : null
+            acc_2: type === "Transfer" ? formData.acc_2 : null
         }));
 
         if (type !== "Transfer") {
@@ -108,65 +108,74 @@ const Entry = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!formData.source_account || !formData.type) return;
-
-        const destinationAccount =
-            formData.type === "Transfer"
-                ? formData.destination_account
-                : "";
+        if (!formData.acc_1 || !formData.type) return;
 
         try {
-            await axios.post(`${apiUrl}/transactions`, {
-                user_id: formData.user_id,
-                date: formData.date,
-                type: formData.type,
-                source_account: formData.source_account,
-                destination_account: destinationAccount,
-                category: formData.category,
-                amount: parseFloat(formData.amount),
-                note: formData.note
-            });
+           
 
-            const sourceAccount = await axios.get(`${apiUrl}/accounts/${formData.source_account}`)
+            const acc1 = await axios.get(`${apiUrl}/accounts/${formData.acc_1}`)
 
             if (formData.type=="Expense"){
-                if (sourceAccount.data.type==="Credit"){
-                    sourceAccount.data.balance = sourceAccount.data.balance + parseFloat(formData.amount)
+                if (acc1.data.type==="Credit"){
+                    acc1.data.balance = acc1.data.balance + parseFloat(formData.amount)
                 }
                 else{
-                    sourceAccount.data.balance = sourceAccount.data.balance - parseFloat(formData.amount)
+                    acc1.data.balance = acc1.data.balance - parseFloat(formData.amount)
                 }
             }
             else if (formData.type=="Income"){
-                sourceAccount.data.balance = sourceAccount.data.balance + parseFloat(formData.amount)
+                acc1.data.balance = acc1.data.balance + parseFloat(formData.amount)
             }
 
             else {
-                const destinationAccount = await axios.get(`${apiUrl}/accounts/${formData.destination_account}`)
+                console.log(formData)
+                const acc2 = await axios.get(`${apiUrl}/accounts/${formData.acc_2}`)
 
-                if (sourceAccount.data.type !== "Credit"){
-                    sourceAccount.data.balance = sourceAccount.data.balance - parseFloat(formData.amount)
+                if (acc1.data.type !== "Credit"){
+                    acc1.data.balance = acc1.data.balance - parseFloat(formData.amount)
 
                 }
 
                 else {
-                    sourceAccount.data.balance = sourceAccount.data.balance + parseFloat(formData.amount)
+                    acc1.data.balance = acc1.data.balance + parseFloat(formData.amount)
                 }
 
-                if(destinationAccount.data.type == "Checking" || destinationAccount.data.type=="Savings"){
-                    destinationAccount.data.balance = destinationAccount.data.balance + parseFloat(formData.amount)
+                if(acc2.data.type == "Checking" || acc2.data.type=="Savings"){
+                    acc2.data.balance = acc2.data.balance + parseFloat(formData.amount)
                 }
-                else if (destinationAccount.data.type=="Credit"){
+                else if (acc2.data.type=="Credit"){
 
-                    destinationAccount.data.balance = destinationAccount.data.balance - parseFloat(formData.amount)
+                    acc2.data.balance = acc2.data.balance - parseFloat(formData.amount)
                 }
 
-                await axios.patch(`${apiUrl}/accounts/${formData.destination_account}/${destinationAccount.data.balance}`)
+                await axios.patch(`${apiUrl}/accounts/${formData.acc_2}/${acc2.data.balance}`)
 
+                await axios.post(`${apiUrl}/transactions`, {
+                    user_id: formData.user_id,
+                    date: formData.date,
+                    type: formData.type,
+                    acc_1: formData.acc_1,
+                    acc_2: acc2.data.id || null,
+                    category: formData.category,
+                    amount: parseFloat(formData.amount),
+                    balance: acc1.data.balance,
+                    note: formData.note
+                });
 
+                await axios.post(`${apiUrl}/transactions`, {
+                    user_id: formData.user_id,
+                    date: formData.date,
+                    type: formData.type,
+                    acc_1: formData.acc_2,
+                    acc_2: null,
+                    category: null,
+                    balance: acc2.data.balance,
+                    amount: parseFloat(formData.amount),
+                    note: formData.note
+                });
             }
 
-            await axios.patch(`${apiUrl}/accounts/${formData.source_account}/${sourceAccount.data.balance}`)
+            await axios.patch(`${apiUrl}/accounts/${formData.acc_1}/${acc1.data.balance}`)
             handleClear();
             navigate("/transactions");
 
@@ -181,10 +190,10 @@ const Entry = () => {
 
         setFormData({
             user_id: user.id,
-            date: new Date().toISOString().split("T")[0],
+            date: new Date().toISOString(),
             type: "",
-            source_account: "",
-            destination_account: null,
+            acc_1: "",
+            acc_2: null,
             category: "",
             amount: "",
             note: ""
@@ -257,12 +266,7 @@ const Entry = () => {
                                     <strong>Source account</strong>
                                    
                                     <div className="span ml-2 mr-2 digits-parent">
-                                    {
-                                        accounts.length===0 ? 
-                                        <div>No accounts saved</div>
-                                        :
-                                        <span>
-
+                            
                                         <span className="gap-5">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#938D8D">
                                                 <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z"/>
@@ -276,8 +280,7 @@ const Entry = () => {
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
                                             <path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/>
                                         </svg>
-                                        </span>
-                                    }
+                                    
                                     
                                         <div className={`${accounts.length===0 ? "hidden" : "border digits-child"}`}>                                            {accounts.map((acc) => (
                                                 <div
@@ -287,7 +290,7 @@ const Entry = () => {
                                                         setSelectedFrom(acc);
                                                         setFormData((prev) => ({
                                                             ...prev,
-                                                            source_account: acc.id!
+                                                            acc_1: acc.id!
                                                         }));
                                                     }}
                                                 >
@@ -330,7 +333,7 @@ const Entry = () => {
                                                             setSelectedTo(acc);
                                                             setFormData((prev) => ({
                                                                 ...prev,
-                                                                to_account: acc.id!
+                                                                acc_2: acc.id!
                                                             }));
                                                         }}
                                                     >

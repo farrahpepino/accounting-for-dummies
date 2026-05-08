@@ -7,73 +7,75 @@ import type { TransactionDto } from '../../../DTOs/transaction';
 import axios from 'axios';
 
 const Transactions = () => {
+    const [page, setPage] = useState(1);
+
     const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const apiUrl = import.meta.env.VITE_API_URL; 
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const [selectedType, setSelectedType] = useState("Checking");
     const [transactions, setTransactions] = useState<TransactionDto[]>([]);
+    const [totalPages, setTotalPages] = useState(1);
 
     const entities = [
-        "Date", "Type", "Account", "Amount", "Debit", "Credit", "Balance"
+        "Date", "Type", "Account", "Amount", "Inflow", "Outflow", "Balance"
     ];
 
     const getTransactions = async (type: string) => {
         const res = await axios.get(
-            `${apiUrl}/transactions/${user.id}/${type}`
+            `${apiUrl}/transactions/${user.id}/${type}/${page}`
         );
-        console.log(res.data)
         return res.data;
-
     };
 
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
                 const data = await getTransactions(selectedType);
-                console.log(data)
-                setTransactions(data);
+                setTransactions(data.transactions);
+                setTotalPages(data.total_pages);
             } catch (err) {
                 console.error("Failed to fetch transactions:", err);
             }
         };
 
         fetchTransactions();
-    }, [selectedType]);
+    }, [selectedType, page]);
 
     return (
         <div>
             <Logo />
             <Sidebar />
 
-                <div className='container'>
-                    <div className='box border'>
-                        <div className="span heading">
-                            <div className="bold lg">Transactions</div>
+            <div className='container'>
+                <div className='box border'>
 
-                            <div className='span'>
-                                <div className='green border span types-parent'>
-                                    <div>{selectedType}</div>
+                    <div className="span heading">
+                        <div className="bold lg">Transactions</div>
 
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
-                                        <path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/>
-                                    </svg>
+                        <div className='span'>
+                            <div className='green border span types-parent'>
+                                <div>{selectedType}</div>
 
-                                    <div className="types-child border">
-                                        <div onClick={() => setSelectedType("Checking")}>Checking</div>
-                                        <div onClick={() => setSelectedType("Credit")}>Credit</div>
-                                        <div onClick={() => setSelectedType("Savings")}>Savings</div>
-                                    </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+                                    <path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/>
+                                </svg>
+
+                                <div className="types-child border">
+                                    <div onClick={() => setSelectedType("Checking")}>Checking</div>
+                                    <div onClick={() => setSelectedType("Credit")}>Credit</div>
+                                    <div onClick={() => setSelectedType("Savings")}>Savings</div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <br /><br /><br />
+                    <br /><br /><br />
 
-                        {transactions.length === 0 ? (
-                            <div className="sub center">
-                                No data available
-                            </div>
-                        ) : (
+                    {transactions.length === 0 ? (
+                        <div className="sub center">
+                            No data available
+                        </div>
+                    ) : (
 
                         <table>
                             <thead>
@@ -87,71 +89,113 @@ const Transactions = () => {
                             </thead>
 
                             <tbody>
-                                {transactions.map((transaction) => (
-                                    <tr key={transaction.id} className='span divider'>
+                                {transactions.map((transaction) => {
 
-                                        <td>
-                                            {new Date(transaction.date).toLocaleString()}
-                                        </td>
+                                    let inflow = false;
+                                    let outflow = false;
 
-                                        <td>{transaction.type}</td>
+                                    if (transaction.type === "Income") {
+                                        inflow = true;
+                                    } else if (transaction.type === "Expense") {
+                                        outflow = true;
+                                    } else if (transaction.type === "Transfer") {
+                                        const destination = transaction.acc_2;
 
-                                        <td className='gap-5'>
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#938D8D">
-                                                <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z"/>
-                                            </svg>
-                                            {transaction.source_account.last_digits}
-                                        </td>
+                                        if(destination==null){
+                                            inflow=true
+                                        }
+                                        else {
+                                            outflow=true
+                                        }
+                                    }
 
-                                        <td>
-                                            <span className='sub mr-5'>$</span>
-                                            {CompactNumber(transaction.amount)}
-                                        </td>
+                                    return (
+                                        <tr key={transaction.id} className='span divider'>
 
-                                        <td>
-                                            {transaction.type === "Expense" && (
-                                                <div className="credit">
-                                                    <span className='sub mr-5'>$</span>
-                                                    {CompactNumber(transaction.amount)}
-                                                </div>
-                                            )}
-                                        </td>
+                                            <td>
+                                                {new Date(transaction.date).toLocaleDateString('en-US')}
+                                            </td>
 
-                                        <td>
-                                            {transaction.type === "Income" && (
-                                                <div className="debit">
-                                                    <span className='sub mr-5'>$</span>
-                                                    {CompactNumber(transaction.amount)}
-                                                </div>
-                                            )}
-                                        </td>
+                                            <td>{transaction.type}</td>
 
-                                        <td>
-                                            <span className='sub mr-5'>$</span>
-                                            {CompactNumber(transaction.amount)}
-                                        </td>
+                                            <td className='gap-5'>
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#938D8D">
+                                                    <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z"/>
+                                                </svg>
+                                                {transaction.acc_1.last_digits}
+                                            </td>
 
-                                    </tr>
-                                ))}
+                                            <td>
+                                                <span className='sub mr-5'>$</span>
+                                                {CompactNumber(transaction.amount)}
+                                            </td>
+
+                                            {/* INFLOW */}
+                                            <td>
+                                                {(inflow) && (
+                                                    <div className="debit">
+                                                        <span className='sub mr-5'>$</span>
+                                                        {CompactNumber(transaction.amount)}
+                                                    </div>
+                                                )}
+                                            </td>
+
+                                            {/* OUTFLOW */}
+                                            <td>
+                                                {(outflow) && (
+                                                    <div className="credit">
+                                                        <span className='sub mr-5'>$</span>
+                                                        {CompactNumber(transaction.amount)}
+                                                    </div>
+                                                )}
+                                            </td>
+
+                                            <td>
+                                                <span className='sub mr-5'>$</span>
+                                                {CompactNumber(transaction.balance)}
+                                            </td>
+
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
-                        )}
+                    )}
 
-                        <div className='pages sub xs span'>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
-                                <path d="M560-253.85 333.85-480 560-706.15 602.15-664l-184 184 184 184L560-253.85Z"/>
-                            </svg>
+                    <div className={`${totalPages === 0 ? "hidden" : "pages sub xs span"}`}>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="24px"
+                            viewBox="0 -960 960 960"
+                            width="24px"
+                            fill="#000000"
+                            onClick={() => {
+                                if (page > 1) setPage(page - 1);
+                            }}
+                            className={`page-btn ${page > 1 ? "disabled" : ""}`}
+                        >
+                            <path d="M560-253.85 333.85-480 560-706.15 602.15-664l-184 184 184 184L560-253.85Z"/>
+                        </svg>
 
-                            <div>Pages <strong>1</strong> / 10</div>
+                        <div>Pages <strong>{page}</strong> / {totalPages}</div>
 
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
-                                <path d="m517.85-480-184-184L376-706.15 602.15-480 376-253.85 333.85-296l184-184Z"/>
-                            </svg>
-                        </div>
-
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="24px"
+                            viewBox="0 -960 960 960"
+                            width="24px"
+                            fill="#000000"
+                            onClick={() => {
+                                if (page < totalPages) setPage(page + 1);
+                            }}
+                            className={`page-btn ${page < totalPages ? "disabled" : ""}`}
+                        >
+                            <path d="m517.85-480-184-184L376-706.15 602.15-480 376-253.85 333.85-296l184-184Z"/>
+                        </svg>
                     </div>
+
                 </div>
-            
+            </div>
         </div>
     );
 };
