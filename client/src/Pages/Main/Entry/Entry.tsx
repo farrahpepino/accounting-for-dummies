@@ -4,11 +4,13 @@ import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar";
 import './Entry.css';
 import axios from "axios";
 import type { AccountDto } from "../../../DTOs/account";
+import { useNavigate } from "react-router-dom";
 
 const Entry = () => {
 
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const apiUrl = import.meta.env.VITE_API_URL;
+    const navigate = useNavigate();
 
     const [checkingAccounts, setCheckingAccounts] = useState<AccountDto[]>([]);
     const [savingsAccounts, setSavingsAccounts] = useState<AccountDto[]>([]);
@@ -115,6 +117,9 @@ const Entry = () => {
                     amount: parseFloat(formData.amount),
                     note: formData.note
                 });
+
+                handleClear()
+                navigate("/transactions")
             }
             catch (err) {
                 console.error("Transaction cannot be created:", err)
