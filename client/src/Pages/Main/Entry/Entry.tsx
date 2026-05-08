@@ -34,6 +34,19 @@ const Entry = () => {
         }
     ];
 
+    const [formData, setFormData] = useState({
+        user_id: user.id,
+        date: new Date().toISOString().split("T")[0],
+        type: "",
+        from_account: "",
+        to_account: "",
+        category: "",
+        amount: "",
+        note: ""
+    });
+
+    const isTransfer = formData.type === "Transfer";
+
     useEffect(() => {
 
         const fetchAccounts = async () => {
@@ -64,17 +77,6 @@ const Entry = () => {
 
     }, []);
 
-    const [formData, setFormData] = useState({
-        user_id: user.id,
-        date: new Date().toISOString().split("T")[0],
-        type: "",
-        from_account: "",
-        to_account: "",
-        category: "",
-        amount: "",
-        note: ""
-    });
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
@@ -87,8 +89,13 @@ const Entry = () => {
     const handleType = (type: string) => {
         setFormData((prev) => ({
             ...prev,
-            type
+            type,
+            to_account: type === "Transfer" ? "" : "n/a"
         }));
+
+        if (type !== "Transfer") {
+            setSelectedTo(null);
+        }
     };
 
     const handleCategory = (category: string) => {
@@ -100,32 +107,32 @@ const Entry = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (
-            formData.from_account !== "N/A" &&
-            formData.from_account !== "Select" &&
-            formData.to_account !== "Select"
-          )
-        {
-            try {
-                await axios.post(`${apiUrl}/transactions`, {
-                    user_id: formData.user_id,
-                    date: formData.date,
-                    type: formData.type,
-                    from_bank: formData.from_account,
-                    to_bank: formData.to_account || null,
-                    category: formData.category,
-                    amount: parseFloat(formData.amount),
-                    note: formData.note
-                });
 
-                handleClear()
-                navigate("/transactions")
-            }
-            catch (err) {
-                console.error("Transaction cannot be created:", err)
-            }
+        if (!formData.from_account || !formData.type) return;
+
+        const toAccount =
+            formData.type === "Transfer"
+                ? formData.to_account
+                : "n/a";
+
+        try {
+            await axios.post(`${apiUrl}/transactions`, {
+                user_id: formData.user_id,
+                date: formData.date,
+                type: formData.type,
+                from_bank: formData.from_account,
+                to_bank: toAccount,
+                category: formData.category,
+                amount: parseFloat(formData.amount),
+                note: formData.note
+            });
+
+            handleClear();
+            navigate("/transactions");
+
+        } catch (err) {
+            console.error("Transaction cannot be created:", err);
         }
-        console.log(formData)
     };
 
     const handleClear = () => {
@@ -176,31 +183,21 @@ const Entry = () => {
                             <br />
 
                             <div>
-
                                 <strong>Type</strong>
 
                                 <div className="span mt ml-4">
 
-                                    <div
-                                        className="span mr-2"
-                                        onClick={() => handleType("Income")}
-                                    >
+                                    <div className="span mr-2" onClick={() => handleType("Income")}>
                                         <div className={`option-btn ${formData.type === "Income" ? "selected" : ""}`}></div>
                                         <span>Income</span>
                                     </div>
 
-                                    <div
-                                        className="span mr-2"
-                                        onClick={() => handleType("Expense")}
-                                    >
+                                    <div className="span mr-2" onClick={() => handleType("Expense")}>
                                         <div className={`option-btn ${formData.type === "Expense" ? "selected" : ""}`}></div>
                                         <span>Expense</span>
                                     </div>
 
-                                    <div
-                                        className="span mr-2"
-                                        onClick={() => handleType("Transfer")}
-                                    >
+                                    <div className="span mr-2" onClick={() => handleType("Transfer")}>
                                         <div className={`option-btn ${formData.type === "Transfer" ? "selected" : ""}`}></div>
                                         <span>Transfer</span>
                                     </div>
@@ -211,7 +208,6 @@ const Entry = () => {
                             <br />
 
                             <div className="span">
-
                                 <div className="span">
                                     <strong>From</strong>
 
@@ -223,8 +219,8 @@ const Entry = () => {
                                             </svg>
 
                                             {selectedFrom
-                                            ? (selectedFrom.last_digits === 0 ? "N/A" : selectedFrom.last_digits)
-                                            : "Select"}
+                                                ? (selectedFrom.last_digits === 0 ? "N/A" : selectedFrom.last_digits)
+                                                : "Select"}
                                         </span>
 
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
@@ -244,105 +240,77 @@ const Entry = () => {
                                                         }));
                                                     }}
                                                 >
-                                                    {acc.last_digits==0 ? "N/A" :acc.last_digits}
+                                                    {acc.last_digits === 0 ? "N/A" : acc.last_digits}
                                                 </div>
                                             ))}
                                         </div>
 
                                     </div>
-
                                 </div>
 
-                                <div className="span">
-                                    <strong>To</strong>
+                                {isTransfer && (
+                                    <div className="span">
+                                        <strong>To</strong>
 
-                                    <div className="span ml-2 mr-2 digits-parent">
+                                        <div className="span ml-2 mr-2 digits-parent">
 
-                                        <span className="gap-5">
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#938D8D">
-                                                <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z"/>
+                                            <span className="gap-5">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#938D8D">
+                                                    <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z"/>
+                                                </svg>
+
+                                                {selectedTo
+                                                    ? (selectedTo.last_digits === 0 ? "N/A" : selectedTo.last_digits)
+                                                    : "Select"}
+                                            </span>
+
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+                                                <path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/>
                                             </svg>
 
-                                            {selectedTo
-                                            ? (selectedTo.last_digits === 0 ? "N/A" : selectedTo.last_digits)
-                                            : "Select"}
-                                        </span>
+                                            <div className="border digits-child">
+                                                {accounts.map((acc) => (
+                                                    <div
+                                                        key={acc.id}
+                                                        className="pointer"
+                                                        onClick={() => {
+                                                            setSelectedTo(acc);
+                                                            setFormData((prev) => ({
+                                                                ...prev,
+                                                                to_account: acc.id!
+                                                            }));
+                                                        }}
+                                                    >
+                                                        {acc.last_digits === 0 ? "N/A" : acc.last_digits}
+                                                    </div>
+                                                ))}
+                                            </div>
 
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
-                                            <path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/>
-                                        </svg>
-
-                                        <div className="border digits-child">
-                                            {accounts.map((acc) => (
-                                                <div
-                                                    key={acc.id}
-                                                    className="pointer"
-                                                    onClick={() => {
-                                                        setSelectedTo(acc);
-                                                        setFormData((prev) => ({
-                                                            ...prev,
-                                                            to_account: acc.id!
-                                                        }));
-                                                    }}
-                                                >
-                                                    {acc.last_digits==0 ? "N/A" :acc.last_digits}
-                                                </div>
-                                            ))}
                                         </div>
-
                                     </div>
-                                </div>
+                                )}
 
                             </div>
 
                             <br />
 
+                            {formData.type !== "Transfer" && (
                             <div>
-
                                 <strong>Category</strong>
 
                                 <div className="mt ml-4">
 
-                                    <div
-                                        className="span"
-                                        onClick={() => handleCategory("Essentials")}
-                                    >
-                                        <div className={`option-btn ${formData.category === "Essentials" ? "selected" : ""}`}></div>
-                                        <span>Essentials</span>
-                                    </div>
-
-                                    <br />
-
-                                    <div
-                                        className="span"
-                                        onClick={() => handleCategory("Lifestyle")}
-                                    >
-                                        <div className={`option-btn ${formData.category === "Lifestyle" ? "selected" : ""}`}></div>
-                                        <span>Lifestyle</span>
-                                    </div>
-
-                                    <br />
-
-                                    <div
-                                        className="span"
-                                        onClick={() => handleCategory("Growth")}
-                                    >
-                                        <div className={`option-btn ${formData.category === "Growth" ? "selected" : ""}`}></div>
-                                        <span>Growth</span>
-                                    </div>
-
-                                    <br />
-
-                                    <div
-                                        className="span"
-                                        onClick={() => handleCategory("Misc")}
-                                    >
-                                        <div className={`option-btn ${formData.category === "Misc" ? "selected" : ""}`}></div>
-                                        <span>Misc</span>
-                                    </div>
+                                    {["Essentials", "Lifestyle", "Growth", "Misc"].map((c) => (
+                                        <div key={c} className="span" onClick={() => handleCategory(c)}>
+                                            <div className={`option-btn ${formData.category === c ? "selected" : ""}`}></div>
+                                            <span>{c}</span>
+                                        </div>
+                                    ))}
 
                                 </div>
                             </div>
+                            )
+                            }
 
                             <br />
 
@@ -359,16 +327,22 @@ const Entry = () => {
                                 />
                             </div>
 
+                            <br /><br />
+
+                            {formData.type !== "Transfer" && (
+                            <div className="xs sub">To get a behavioral insight and if applicable, what and when did you spend?</div>
+                            )
+                            }
+
                             <br />
 
                             <div className="span">
                                 <strong>Note</strong>
 
                                 <input
-                                    type="text"
                                     title="note"
+                                    type="text"
                                     name="note"
-                                    id="note"
                                     value={formData.note}
                                     onChange={handleChange}
                                     className="border ml-2 input"
@@ -377,30 +351,22 @@ const Entry = () => {
 
                         </div>
 
-                   
+                        <br /><br /><br />
 
-                    <br /><br /><br />
+                        <div className="span set-buttons">
 
-                    <div className="span set-buttons">
+                            <button type="button" className="red-btn btn" onClick={handleClear}>
+                                Clear
+                            </button>
 
-                        <button
-                            type="button"
-                            className="red-btn btn"
-                            onClick={handleClear}
-                        >
-                            Clear
-                        </button>
+                            <button className="green-btn btn" type="submit">
+                                Add
+                            </button>
 
-                        <button
-                            className="green-btn btn"
-                            type="submit"
-                        >
-                            Add
-                        </button>
-                        
+                        </div>
 
-                    </div>
                     </form>
+
                 </div>
             </div>
         </div>

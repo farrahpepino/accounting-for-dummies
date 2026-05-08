@@ -14,7 +14,7 @@ class Transaction(Base):
         nullable=False
     )
     type = Column(String(10), index=True)
-    from_bank = Column(String(36), ForeignKey("accounts.id", ondelete="SET NULL"))
+    from_bank = Column(String(36), ForeignKey("accounts.id", ondelete="CASCADE"))
     to_bank = Column(String(36))
     category = Column(String(10))
     amount = Column(Float)

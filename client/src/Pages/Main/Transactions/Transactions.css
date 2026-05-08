@@ -33,8 +33,11 @@
 .heading .green {
     border-color: #CDCB00;
     padding: 1px 20px;
-    gap: 4rem;
+    width: 130px;
     border-radius: 30px;
+    display: flex;
+    justify-content: space-between;
+
 }
 
 .pages {
@@ -69,4 +72,43 @@ table tr th {
     text-align: center;
     overflow: hidden;
     white-space: nowrap;
+}
+
+.types-parent {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.types-child {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 3px;
+
+
+    width: 140px;
+    background-color: white;
+
+
+    padding: 10px;
+    padding-left: 20px;
+    max-height: 6rem;
+    z-index: 10;
+
+    overflow-y: scroll;
+
+    display: none;
+
+}
+
+.types-parent:hover .types-child {
+    display: flex;
+    flex-direction: column;
+}
+
+.types-child:hover .types-child {
+    display: flex;
+    flex-direction: column;
 }

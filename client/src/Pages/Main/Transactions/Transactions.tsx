@@ -2,8 +2,11 @@ import './Transactions.css';
 import Logo from '../../Shared/Logo/Logo';
 import Sidebar from '../../Shared/Navigation/Sidebar/Sidebar';
 import { CompactNumber } from '../../../Services/CompactNumber';
+import { useState } from 'react';
 
 const Transactions = () => {
+
+    const [selectedType, setSelectedType] = useState("Checking");
 
     const entities = [
         "Date", "Type", "Account", "Amount", "Debit", "Credit", "Balance"
@@ -43,16 +46,23 @@ const Transactions = () => {
                         <div className="bold lg">Transactions</div>
 
                         <div className='span'>
-                            <div className='green border span'>
-                                <div>Checking</div>
+                            <div className='green border span types-parent'>
+                                <div>{selectedType}</div>
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
                                     <path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/>
                                 </svg>
+
+                                <div className="types-child border">
+                                    <div onClick={() => setSelectedType("Checking")}>Checking</div>
+                                    <div onClick={() => setSelectedType("Credit")}>Credit</div>
+                                    <div onClick={() => setSelectedType("Savings")}>Savings</div>
+                                </div>
                             </div>
 
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
                                 <path d="M213.85-180v-284.62h-80v-40h200v40h-80V-180h-40Zm0-435.38V-780h40v164.62h-40Zm166.15 0v-40h80V-780h40v124.62h80v40H380ZM460-180v-324.62h40V-180h-40Zm246.15 0v-124.62h-80v-40h200v40h-80V-180h-40Zm0-275.38V-780h40v324.62h-40Z"/>
                             </svg>
+    
                         </div>
                     </div>
 

@@ -27,7 +27,6 @@
   margin-top: 7rem;
   bottom: 2rem;
   contain: content;
-  overflow: scroll;
 }
 
 .btn {
@@ -183,6 +182,30 @@ form {
   gap: 5px;
 }
 
+.red {
+  color: red;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -193,8 +216,4 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
-}
-
-.red {
-  color: red;
 }
