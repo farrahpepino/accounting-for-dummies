@@ -35,9 +35,11 @@ def get_accounts(
     return accounts
 
 
-@router.delete("accounts/{id}")
+@router.delete("/accounts/{id}")
 def delere_account(id, db: Session = Depends(get_db)):
     deleted = service.delete_account(db, id)
+    
+    print(id)
     
     if not deleted:
         raise HTTPException(

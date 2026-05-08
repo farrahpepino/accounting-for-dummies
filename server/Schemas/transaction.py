@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Date, ForeignKey
+from sqlalchemy import Column, String, Float, Date, ForeignKey
 from database import Base
 import uuid
 
@@ -14,10 +14,11 @@ class Transaction(Base):
         nullable=False
     )
     type = Column(String(10), index=True)
-    from_bank = Column(String(36))
+    from_bank = Column(String(36), ForeignKey("accounts.id", ondelete="SET NULL"))
     to_bank = Column(String(36))
     category = Column(String(10))
-    amount = Column(Integer)
+    amount = Column(Float)
     date = Column(Date)    
+    note = Column(String(360))
     
     

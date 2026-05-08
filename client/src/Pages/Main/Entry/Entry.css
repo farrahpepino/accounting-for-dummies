@@ -10,16 +10,15 @@
     top: 100%;
     left: 0;
 
-    width: 4.5rem;
+    width: 130px;
     background-color: white;
 
 
-    padding: 0.5rem;
+    padding: 10px;
     max-height: 6rem;
     z-index: 10;
 
     overflow-y: scroll;
-    text-align: center;
 
     display: none;
 

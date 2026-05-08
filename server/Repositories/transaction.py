@@ -5,7 +5,7 @@ from DTOs.transaction import Transaction_Dto
 
 class Transaction_Repository:
     def create_transaction(self, db:Session, transaction_dto: Transaction_Dto):
-        transaction = transaction_dto(**transaction_dto.model_dump())
+        transaction = Transaction(**transaction_dto.model_dump())
     
         db.add(transaction)
         db.commit()

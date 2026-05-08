@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Float
 from datetime import datetime
 from database import Base
 import uuid
@@ -16,7 +16,7 @@ class Account(Base):
     )
     type = Column(String(10), index=True)
     bank = Column(String(255), index=True)
-    balance = Column(Integer)
+    balance = Column(Float)
     date = Column(DateTime, default=datetime.now)
     last_digits = Column(Integer)
     

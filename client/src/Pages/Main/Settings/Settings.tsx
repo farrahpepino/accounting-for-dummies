@@ -1,13 +1,13 @@
 import Logo from "../../Shared/Logo/Logo";
 import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar";
 import './Settings.css'
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
 
-    const apiUrl = import.meta.env.VITE_API_URL; 
+    // const apiUrl = import.meta.env.VITE_API_URL; 
     const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     return (
         <div>

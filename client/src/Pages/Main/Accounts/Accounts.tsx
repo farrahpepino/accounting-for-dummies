@@ -47,6 +47,27 @@ const Accounts = () => {
 
     }, []);
 
+    const deleteAccount = async (id: string, type: string) => {
+        try {
+            const res = await axios.delete(`${apiUrl}/accounts/${id}`);
+
+            if (res) {
+                if( type == "Checking") {
+                    setCheckingAccounts(prev => prev.filter(acc => acc.id !== id));
+                }
+                else if (type == "Credit") {
+                    setCreditAccounts(prev => prev.filter(acc => acc.id !== id));
+                }
+                else {
+                    setSavingsAccounts(prev => prev.filter(acc => acc.id !== id));
+                }
+            }
+        }
+        catch (err) {
+            console.error("Failed to delete account:", err);
+        }
+    }
+
     
   return (
     <div>
@@ -84,7 +105,7 @@ const Accounts = () => {
                                         <span>Edit account</span>
                                     </div>
                                     <div className="red">
-                                        <span>Delete account</span>
+                                        <span onClick={() => deleteAccount(acc.id!, acc.type!)}>Delete account</span>
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +137,7 @@ const Accounts = () => {
                                         <span>Edit account</span>
                                     </div>
                                     <div className="red">
-                                        <span>Delete account</span>
+                                        <span onClick={() => deleteAccount(acc.id!, acc.type!)}>Delete account</span>
                                     </div>
                                 </div>
                             </div>
@@ -148,7 +169,7 @@ const Accounts = () => {
                                         <span>Edit account</span>
                                     </div>
                                     <div className="red">
-                                        <span>Delete account</span>
+                                        <span onClick={() => deleteAccount(acc.id!, acc.type!)}>Delete account</span>
                                     </div>
                                 </div>
                             </div>
