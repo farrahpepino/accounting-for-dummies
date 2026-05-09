@@ -5,6 +5,7 @@ import { CompactNumber } from '../../../Services/CompactNumber';
 import { useState, useEffect } from 'react';
 import type { TransactionDto } from '../../../DTOs/transaction';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Transactions = () => {
     const [page, setPage] = useState(1);
@@ -15,6 +16,7 @@ const Transactions = () => {
     const [selectedType, setSelectedType] = useState("Checking");
     const [transactions, setTransactions] = useState<TransactionDto[]>([]);
     const [totalPages, setTotalPages] = useState(1);
+    const navigate = useNavigate()
 
     const entities = [
         "Date", "Type", "Account", "Amount", "Inflow", "Outflow", "Balance"
@@ -110,10 +112,12 @@ const Transactions = () => {
                                     }
 
                                     return (
-                                        <tr key={transaction.id} className='span divider'>
-
+                                        <tr key={transaction.id} className='span divider'
+                                        onClick={() => {
+                                            navigate("/edit-transaction")
+                                        }}>
                                             <td>
-                                                {new Date(transaction.date).toLocaleDateString('en-US')}
+                                                {new Date(transaction.date + "T12:00:00").toLocaleDateString('en-US')}
                                             </td>
 
                                             <td>{transaction.type}</td>
@@ -172,7 +176,7 @@ const Transactions = () => {
                             onClick={() => {
                                 if (page > 1) setPage(page - 1);
                             }}
-                            className={`page-btn ${page > 1 ? "disabled" : ""}`}
+                            className={`page-btn ${page >= 1 ? "disabled" : ""}`}
                         >
                             <path d="M560-253.85 333.85-480 560-706.15 602.15-664l-184 184 184 184L560-253.85Z"/>
                         </svg>
@@ -188,7 +192,7 @@ const Transactions = () => {
                             onClick={() => {
                                 if (page < totalPages) setPage(page + 1);
                             }}
-                            className={`page-btn ${page < totalPages ? "disabled" : ""}`}
+                            className={`page-btn ${page <= totalPages ? "disabled" : ""}`}
                         >
                             <path d="m517.85-480-184-184L376-706.15 602.15-480 376-253.85 333.85-296l184-184Z"/>
                         </svg>

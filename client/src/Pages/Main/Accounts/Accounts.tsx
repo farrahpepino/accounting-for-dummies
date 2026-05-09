@@ -109,7 +109,11 @@ const Accounts = () => {
 
                                         <div className="account-child border">
                                             <div>
-                                                <span>Edit account</span>
+                                                <span onClick={()=> {navigate("/edit-account", {
+                                                        state: { account: acc }
+                                                    })}}>
+                                                    Edit account
+                                                </span>
                                             </div>
                                             <div className="red">
                                                 <span onClick={() => deleteAccount(acc.id!, acc.type!)}>Delete account</span>
