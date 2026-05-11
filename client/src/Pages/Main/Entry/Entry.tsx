@@ -5,6 +5,7 @@ import './Entry.css';
 import axios from "axios";
 import type { AccountDto } from "../../../DTOs/account";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 const Entry = () => {
 
@@ -24,6 +25,8 @@ const Entry = () => {
         ...savingsAccounts,
         ...creditAccounts
     ];
+
+    const pairId = uuidv4();
 
     const [formData, setFormData] = useState<{
         user_id: string;
@@ -107,77 +110,109 @@ const Entry = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
+    
         if (!formData.acc_1 || !formData.type) return;
-
+    
         try {
-           
-
-            const acc1 = await axios.get(`${apiUrl}/accounts/${formData.acc_1}`)
-
-            if (formData.type=="Expense"){
-                if (acc1.data.type==="Credit"){
-                    acc1.data.balance = acc1.data.balance + parseFloat(formData.amount)
+    
+            const amount = Number(formData.amount);
+    
+            const acc1 = await axios.get(`${apiUrl}/accounts/${formData.acc_1}`);
+    
+            if (formData.type === "Expense") {
+    
+                if (acc1.data.type === "Credit") {
+                    acc1.data.balance += amount;
+                } else {
+                    acc1.data.balance -= amount;
                 }
-                else{
-                    acc1.data.balance = acc1.data.balance - parseFloat(formData.amount)
-                }
-            }
-            else if (formData.type=="Income"){
-                acc1.data.balance = acc1.data.balance + parseFloat(formData.amount)
-            }
-
-            else {
-                const acc2 = await axios.get(`${apiUrl}/accounts/${formData.acc_2}`)
-
-                if (acc1.data.type !== "Credit"){
-                    acc1.data.balance = acc1.data.balance - parseFloat(formData.amount)
-
-                }
-
-                else {
-                    acc1.data.balance = acc1.data.balance + parseFloat(formData.amount)
-                }
-
-                if(acc2.data.type == "Checking" || acc2.data.type=="Savings"){
-                    acc2.data.balance = acc2.data.balance + parseFloat(formData.amount)
-                }
-                else if (acc2.data.type=="Credit"){
-
-                    acc2.data.balance = acc2.data.balance - parseFloat(formData.amount)
-                }
-
-                await axios.patch(`${apiUrl}/accounts/${formData.acc_2}/${acc2.data.balance}`)
 
                 await axios.post(`${apiUrl}/transactions`, {
                     user_id: formData.user_id,
                     date: formData.date,
                     type: formData.type,
                     acc_1: formData.acc_1,
-                    acc_2: acc2.data.id || null,
+                    acc_2: null,
                     category: formData.category,
-                    amount: parseFloat(formData.amount),
-                    balance: acc1.data.balance,
+
+                    is_source: true,
+                    amount: amount,
                     note: formData.note
                 });
+    
+            } 
+            else if (formData.type === "Income") {
+    
+                if (acc1.data.type === "Credit") {
+                    acc1.data.balance -= amount;
+                } else {
+                    acc1.data.balance += amount;
+                }
 
                 await axios.post(`${apiUrl}/transactions`, {
                     user_id: formData.user_id,
                     date: formData.date,
                     type: formData.type,
-                    acc_1: formData.acc_2,
+                    acc_1: formData.acc_1,
                     acc_2: null,
-                    category: null,
-                    balance: acc2.data.balance,
-                    amount: parseFloat(formData.amount),
+                    category: formData.category,
+                    is_source: true,
+                    amount: amount,
+                    note: formData.note
+                });
+    
+            } 
+            else {
+    
+                const acc2 = await axios.get(`${apiUrl}/accounts/${formData.acc_2}`);
+    
+                if (acc1.data.type !== "Credit") {
+                    acc1.data.balance -= amount;
+                    acc2.data.balance +=amount;
+
+                    
+                } 
+                else if (acc1.data.type === "Credit") {
+                    acc1.data.balance += amount;
+                    acc2.data.balance +=amount;
+                } 
+    
+                await axios.patch(`${apiUrl}/accounts/${formData.acc_2}/${acc2.data.balance}`);
+    
+                await axios.post(`${apiUrl}/transactions`, {
+                    user_id: formData.user_id,
+                    date: formData.date,
+                    type: formData.type,
+                    acc_1: formData.acc_1,
+                    acc_2: acc2.data.id,
+                    category: formData.category,
+                    is_source: true,
+                    amount: amount,
+                    pair_id: pairId,
+                    note: formData.note
+                });
+    
+                await axios.post(`${apiUrl}/transactions`, {
+                    user_id: formData.user_id,
+                    date: formData.date,
+                    type: "Transfer",
+                    acc_1: formData.acc_2,
+                    acc_2: formData.acc_1,
+                    category: "Transfer",
+                    amount: amount,
+                    is_source: false,
+                    pair_id: pairId,
                     note: formData.note
                 });
             }
 
-            await axios.patch(`${apiUrl}/accounts/${formData.acc_1}/${acc1.data.balance}`)
+           
+    
+            await axios.patch(`${apiUrl}/accounts/${formData.acc_1}/${acc1.data.balance}`);
+    
             handleClear();
             navigate("/transactions");
-
+    
         } catch (err) {
             console.error("Transaction cannot be created:", err);
         }

@@ -4,7 +4,7 @@ from typing import List
 
 from database import get_db
 from Services.transaction import Transaction_Service
-from DTOs.transaction import Transaction_Dto, Partial_Transaction_Dto
+from DTOs.transaction import Transaction_Dto
 
 router = APIRouter()
 service = Transaction_Service()
@@ -34,9 +34,9 @@ def get_transactions(user_id, type, page_num, db: Session = Depends(get_db)):
         
     return transactions
 
-@router.delete("/transaction")
-def delete_transaction(partial_transaction: Partial_Transaction_Dto, db: Session = Depends(get_db)):
-    deleted = service.delete_transaction(db, partial_transaction)
+@router.delete("/transaction/{id}")
+def delete_transaction(id: str, db: Session = Depends(get_db)):
+    deleted = service.delete_transaction(db, id)
     
     if not deleted:
         raise HTTPException(
@@ -45,3 +45,7 @@ def delete_transaction(partial_transaction: Partial_Transaction_Dto, db: Session
         )
         
     return deleted
+
+@router.get("/{user_id}/{account_type}/total")
+def get_total_amount_by_account_type(user_id: str, account_type: str, db: Session = Depends(get_db)):        
+    return service.get_total_amount_by_account_type(db, user_id, account_type)

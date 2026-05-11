@@ -15,7 +15,7 @@ class Transaction(Base):
     )
     type = Column(String(10), index=True)
     
-    acc_1 = Column(String(36), ForeignKey("accounts.id", ondelete="SET NULL"))
+    acc_1 = Column(String(36), ForeignKey("accounts.id", ondelete="CASCADE"))
     
     acc_1_r = relationship("Account", foreign_keys=[acc_1])
     acc_2 = Column(
@@ -25,11 +25,11 @@ class Transaction(Base):
     )    
     
     acc_2_r = relationship("Account", foreign_keys=[acc_2])
-
+    pair_id = Column(String(36), nullable=True)
     category = Column(String(10), nullable=True)
     amount = Column(Float, nullable=False)
-    balance = Column(Float, nullable=False)
     date = Column(Date)    
     note = Column(String(360), nullable=True)
     is_edited = Column(Boolean, default=False)
+    is_source = Column(Boolean)
     

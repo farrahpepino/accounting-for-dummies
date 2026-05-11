@@ -10,15 +10,11 @@ class Transaction_Dto(BaseModel):
     acc_2: Optional[str] = None
     category: Optional[str] = None
     amount: float
-    balance: float
     date: datetime
     note: Optional[str] = None
     is_edited: bool = True
+    pair_id: Optional[str] = None
+    is_source: bool 
 
 
-class Partial_Transaction_Dto(BaseModel):
-    id: str
-    acc_2_id: Optional[str] = None 
-
-    
     

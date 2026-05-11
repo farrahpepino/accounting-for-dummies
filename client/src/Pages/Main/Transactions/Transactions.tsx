@@ -17,6 +17,7 @@ const Transactions = () => {
     const [transactions, setTransactions] = useState<TransactionDto[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const navigate = useNavigate()
+    let balance = 0;
 
     const entities = [
         "Date", "Type", "Account", "Amount", "Inflow", "Outflow", "Balance"
@@ -102,15 +103,25 @@ const Transactions = () => {
                                     } else if (transaction.type === "Expense") {
                                         outflow = true;
                                     } else if (transaction.type === "Transfer") {
-                                        const destination = transaction.acc_2;
+                                        if(transaction.is_source==true){
+                                            if(transaction.acc_1_r.type==="Credit"){
+                                                outflow=true
+                                            }else{
+                                                inflow=true
+                                            }
+                                        }
+                                        else{
+                                            if(transaction.acc_1_r.type!=="Credit"){
+                                                inflow=true
+                                            }else{
+                                                outflow=true
+                                            }
+                                        }
 
-                                        if(destination==null){
-                                            inflow=true
-                                        }
-                                        else {
-                                            outflow=true
-                                        }
                                     }
+
+                                    if (inflow) balance += transaction.amount;
+                                    if (outflow) balance -= transaction.amount;
 
                                     return (
                                         <tr key={transaction.id} className='span divider'
@@ -159,7 +170,7 @@ const Transactions = () => {
 
                                             <td>
                                                 <span className='sub mr-5'>$</span>
-                                                {CompactNumber(transaction.balance)}
+                                                {CompactNumber(balance)}
                                             </td>
 
                                         </tr>

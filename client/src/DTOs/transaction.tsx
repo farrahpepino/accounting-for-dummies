@@ -7,10 +7,11 @@ export interface TransactionDto {
     acc_2: AccountDto
     category: string
     amount: number
-    balance: number
     date: Date
     note: string
     is_edited: boolean
     acc_1_r: AccountDto
     acc_2_r: AccountDto
+    is_source: boolean
+    pair_id?: string
 }

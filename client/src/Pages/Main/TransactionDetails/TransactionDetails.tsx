@@ -66,13 +66,7 @@ const TransactionDetails = () => {
                 }
             }
 
-            await axios.delete(`${apiUrl}/transaction`, {
-                data: {
-                    id: transaction.id,
-                    acc_2_id: transaction.acc_2
-                }
-            });
-
+            await axios.delete(`${apiUrl}/transaction/${transaction.id}`);
             navigate("/transactions");
         } catch (err) {
             console.error(err);

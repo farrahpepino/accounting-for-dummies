@@ -3,7 +3,6 @@ import Logo from "../../Shared/Logo/Logo";
 import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { GetBalance } from "../../../Services/GetBalance";
 
 const Account = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -18,6 +17,13 @@ const Account = () => {
         date: new Date().toISOString(),
         last_digits: ""
     });
+
+    const isFormValid =
+    formData.type.trim() !== "" &&
+    formData.bank.trim() !== "" &&
+    formData.balance > 0 &&
+    formData.date.trim() !== "" &&
+    /^\d{4}$/.test(formData.last_digits);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -44,7 +50,6 @@ const Account = () => {
             const res = await axios.post(`${apiUrl}/accounts`,
                 formData
             );
-            const currentBalance = await GetBalance(formData.type);
 
             await axios.post(`${apiUrl}/transactions`, {
                 user_id: user.id,
@@ -54,7 +59,8 @@ const Account = () => {
                 acc_2: null,
                 category: null,
                 amount: formData.balance,
-                balance: currentBalance + formData.balance,
+                is_source: true,
+                pair_id: null,
                 note: ""
             });
           
@@ -250,6 +256,8 @@ const Account = () => {
                             <button
                                 type="submit"
                                 className="green-btn btn"
+                                disabled={!isFormValid}
+
                             >
                                 Add
                             </button>

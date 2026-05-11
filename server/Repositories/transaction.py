@@ -1,7 +1,10 @@
 from sqlalchemy.orm import Session, joinedload
 from Schemas.transaction import Transaction
+from sqlalchemy import func
 
-from DTOs.transaction import Transaction_Dto, Partial_Transaction_Dto
+
+from DTOs.transaction import Transaction_Dto
+
 
 class Transaction_Repository:
     def create_transaction(self, db:Session, transaction_dto: Transaction_Dto):
@@ -49,29 +52,40 @@ class Transaction_Repository:
             "transactions": transactions,
             "total_pages": total_pages
         }
-    
-    def delete_transaction(self, db: Session, partial_transaction: Partial_Transaction_Dto):
+
+    def delete_transaction(self, db: Session, id: str):
 
         transaction = db.query(Transaction).filter(
-            Transaction.id == partial_transaction.id
+            Transaction.id == id
         ).first()
 
         if not transaction:
             return None
 
-        transaction_2 = None
+        if transaction.pair_id:
 
-        if transaction.acc_2:
-            transaction_2 = db.query(Transaction).filter(
-                Transaction.acc_1 == transaction.acc_2
-            ).first()
+            transactions = db.query(Transaction).filter(
+                Transaction.pair_id == transaction.pair_id
+            ).all()
 
-        db.delete(transaction)
+            for t in transactions:
+                db.delete(t)
 
-        if transaction_2:
-            db.delete(transaction_2)
+        else:
+            db.delete(transaction)
 
         db.commit()
 
         return True
-        
+    
+    def get_total_amount_by_account_type(self, db: Session, user_id: str, account_type: str):
+
+        result = (
+            db.query(func.sum(Transaction.amount))
+            .join(Transaction.acc_1_r)
+            .filter(Transaction.user_id == user_id)
+            .filter(Transaction.acc_1_r.has(type=account_type))
+            .scalar()
+        )
+
+        return result or 0
