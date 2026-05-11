@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Float, Date, ForeignKey
+from sqlalchemy import Column, String, Float, Date, ForeignKey, Boolean
 from database import Base
 import uuid
 from sqlalchemy.orm import relationship
@@ -31,5 +31,5 @@ class Transaction(Base):
     balance = Column(Float, nullable=False)
     date = Column(Date)    
     note = Column(String(360), nullable=True)
-    
+    is_edited = Column(Boolean, default=False)
     

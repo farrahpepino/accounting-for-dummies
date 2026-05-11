@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from Schemas.account import Account
 
-from DTOs.account import Account_Dto
+from DTOs.account import Account_Dto, Partial_Account_Dto
 
 class Account_Repository:
     def create_account(self, db:Session, account_dto: Account_Dto):
@@ -37,7 +37,7 @@ class Account_Repository:
         return account.balance
     
     def delete_account(self, db:Session, id: str):
-        account = db.query(Account).filter(Account.id == id).first()
+        account = self.get_account(db,id)
         
         if not account:
             return None
@@ -46,5 +46,24 @@ class Account_Repository:
         db.commit()
         
         return True 
+    
+    def update_account(self, db: Session, account_dto: Partial_Account_Dto):
+        account = self.get_account(db, account_dto.id)
+
+        if not account:
+            return None
+
+        if account_dto.bank is not None:
+            account.bank = account_dto.bank
+
+        account.date = account_dto.date
+
+        db.commit()
+        db.refresh(account)
+        return account
+    
+    
+        
+        
     
     

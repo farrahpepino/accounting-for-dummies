@@ -10,4 +10,7 @@ export interface TransactionDto {
     balance: number
     date: Date
     note: string
+    is_edited: boolean
+    acc_1_r: AccountDto
+    acc_2_r: AccountDto
 }

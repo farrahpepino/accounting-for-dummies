@@ -13,5 +13,12 @@ class Transaction_Dto(BaseModel):
     balance: float
     date: datetime
     note: Optional[str] = None
+    is_edited: bool = True
+
+
+class Partial_Transaction_Dto(BaseModel):
+    id: str
+    acc_2_id: Optional[str] = None 
+
     
     

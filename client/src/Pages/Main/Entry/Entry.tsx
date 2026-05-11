@@ -128,7 +128,6 @@ const Entry = () => {
             }
 
             else {
-                console.log(formData)
                 const acc2 = await axios.get(`${apiUrl}/accounts/${formData.acc_2}`)
 
                 if (acc1.data.type !== "Credit"){

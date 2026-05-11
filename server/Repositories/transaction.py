@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
 from Schemas.transaction import Transaction
 
-from DTOs.transaction import Transaction_Dto
+from DTOs.transaction import Transaction_Dto, Partial_Transaction_Dto
 
 class Transaction_Repository:
     def create_transaction(self, db:Session, transaction_dto: Transaction_Dto):
@@ -50,14 +50,28 @@ class Transaction_Repository:
             "total_pages": total_pages
         }
     
-    def delete_transaction(self, db:Session, id: str):
-        transaction = db.query(Transaction).filter(Transaction.id == id).first()
-        
+    def delete_transaction(self, db: Session, partial_transaction: Partial_Transaction_Dto):
+
+        transaction = db.query(Transaction).filter(
+            Transaction.id == partial_transaction.id
+        ).first()
+
         if not transaction:
             return None
-        
+
+        transaction_2 = None
+
+        if transaction.acc_2:
+            transaction_2 = db.query(Transaction).filter(
+                Transaction.acc_1 == transaction.acc_2
+            ).first()
+
         db.delete(transaction)
+
+        if transaction_2:
+            db.delete(transaction_2)
+
         db.commit()
-        
+
         return True
         

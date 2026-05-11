@@ -6,5 +6,6 @@ export interface AccountDto  {
     balance: number
     date: Date
     last_digits: number
+    is_edited: boolean
 }
 

@@ -1,5 +1,5 @@
 from Repositories.account import Account_Repository
-from DTOs.account import Account_Dto
+from DTOs.account import Account_Dto, Partial_Account_Dto
 
 class Account_Service:
     
@@ -17,6 +17,9 @@ class Account_Service:
     
     def update_balance(self, db, balance:float, id:str):
         return self.repository.update_balance(db, balance, id)
+    
+    def update_account(self, db, account_dto: Account_Dto ):
+        return self.repository.update_account(db, account_dto)
     
     def delete_account(self, db, id: str):
         return self.repository.delete_account(db, id)

@@ -12,31 +12,28 @@ const AccountEdit = () => {
     const { account } = location.state;
 
     const apiUrl = import.meta.env.VITE_API_URL;
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-    const [type, setType] = useState(account.type || "");
+    const [type] = useState(account.type || "");
     const [bank, setBank] = useState(account.bank || "");
 
     const save = async (e: React.FormEvent) => {
         e.preventDefault();
-
+    
         try {
 
-            await axios.put(`${apiUrl}/accounts/${account.id}`, {
-                user_id: user.id,
-                type: type,
-                bank: bank,
+            await axios.patch(`${apiUrl}/accounts`, {
+                id: account.id,
+                bank: bank
             });
 
             navigate("/accounts");
 
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
     const clear = () => {
-        setType("");
         setBank("");
     };
 
@@ -81,8 +78,7 @@ const AccountEdit = () => {
                             <div className="span ml-6">
 
                                 <div
-                                    className="span mr-2"
-                                    onClick={() => setType("Checking")}
+                                    className="span mr-2 disabled sub"
                                 >
                                     <div
                                         className={`option-btn ${type === "Checking" ? "selected" : ""}`}
@@ -92,9 +88,8 @@ const AccountEdit = () => {
                                 </div>
 
                                 <div
-                                    className="span mr-2"
-                                    onClick={() => setType("Credit")}
-                                >
+                                    className="span mr-2 disabled sub"
+                                > 
                                     <div
                                         className={`option-btn ${type === "Credit" ? "selected" : ""}`}
                                     ></div>
@@ -103,8 +98,7 @@ const AccountEdit = () => {
                                 </div>
 
                                 <div
-                                    className="span mr-2"
-                                    onClick={() => setType("Savings")}
+                                    className="span mr-2 disabled sub"
                                 >
                                     <div
                                         className={`option-btn ${type === "Savings" ? "selected" : ""}`}
@@ -161,8 +155,12 @@ const AccountEdit = () => {
 
                                 <br />
 
-                                <div className="sub ml-6 mt">
+                                <div className="sub ml-6 mt span">
                                     {new Date(account.date).toLocaleDateString('en-US')}
+                                    {
+                                        !account.is_edited &&
+                                        <span className="sub italic">Edited</span>
+                                    }
                                 </div>
 
                             </div>

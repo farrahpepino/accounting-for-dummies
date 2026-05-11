@@ -196,6 +196,9 @@ form {
   color: red;
 }
 
+.italic {
+  font-style: italic;
+}
 
 
 
@@ -227,3 +230,4 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+

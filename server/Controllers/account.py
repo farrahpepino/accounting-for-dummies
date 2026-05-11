@@ -4,7 +4,7 @@ from typing import List
 
 from database import get_db
 from Services.account import Account_Service
-from DTOs.account import Account_Dto
+from DTOs.account import Account_Dto, Partial_Account_Dto
 
 router = APIRouter()
 service = Account_Service()
@@ -47,8 +47,12 @@ def get_account(
     return account
 
 @router.patch("/accounts/{id}/{balance}")
-def update_name(id: str, balance: float, db: Session = Depends(get_db)):
+def update_balance(id: str, balance: float, db: Session = Depends(get_db)):
     return service.update_balance(db, balance, id)
+
+@router.patch("/accounts")
+def update_account(account_dto: Partial_Account_Dto, db: Session = Depends(get_db)):
+    return service.update_account(db, account_dto)
 
 @router.delete("/accounts/{id}")
 def delete_account(id, db: Session = Depends(get_db)):

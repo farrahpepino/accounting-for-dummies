@@ -1,5 +1,5 @@
 from Repositories.transaction import Transaction_Repository
-from DTOs.transaction import Transaction_Dto
+from DTOs.transaction import Transaction_Dto, Partial_Transaction_Dto
 
 class Transaction_Service:
     def __init__(self):
@@ -11,5 +11,5 @@ class Transaction_Service:
     def get_transactions(self, db, type: str, user_id: str, page_num: int):
         return self.repository.get_transactions(db, type, user_id, page_num)
     
-    def delete_transaction(self, db, id: str):
-        return self.repository.delete_transaction(db, id)
+    def delete_transaction(self, db, partial_transaction: Partial_Transaction_Dto):
+        return self.repository.delete_transaction(db, partial_transaction)
