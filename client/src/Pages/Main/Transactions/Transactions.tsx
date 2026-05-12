@@ -49,25 +49,44 @@ const Transactions = () => {
 
         fetchTransactions();
     }, [selectedType, page]);
-        
-            
-    const transactionsWithBalance = transactions.map((transaction) => {
+
+    const chronological = [...transactions].slice().reverse();
+
+    let runningBalance = 0;
+
+    const balances = chronological.map((t) => {
+        if (t.type === "Income") runningBalance += t.amount;
+        else if (t.type === "Expense") runningBalance -= t.amount;
+        else if (t.type === "Transfer") {
+            runningBalance += t.is_source ? -t.amount : t.amount;
+        }
+
+        return runningBalance;
+    });
+
+    const transactionsWithBalance = transactions.map((transaction, i) => {
 
         let inflow = false;
         let outflow = false;
 
         if (transaction.type === "Income") {
             inflow = true;
-        } else if (transaction.type === "Expense") {
+        } 
+        
+        else if (transaction.type === "Expense") {
             outflow = true;
-        } else if (transaction.type === "Transfer") {
+        } 
+        
+        else if (transaction.type === "Transfer") {
             transaction.is_source ? outflow = true : inflow = true;
         }
         
+        const balancesReversed = [...balances].reverse();
         return {
             transaction,
             inflow,
-            outflow
+            outflow,
+            balance: balancesReversed[i]
         };
     });
 
@@ -119,7 +138,7 @@ const Transactions = () => {
                             </thead>
 
                             <tbody>
-                                {transactionsWithBalance.map(({ transaction, inflow, outflow }) => {
+                                {transactionsWithBalance.map(({ transaction, inflow, outflow, balance }) => {
 
                                     return (
                                         <tr
@@ -170,6 +189,7 @@ const Transactions = () => {
 
                                             <td>
                                                 <span className='sub mr-5'>$
+                                                {CompactNumber(balance)}
                                                 </span>
                                             </td>
                                         </tr>
