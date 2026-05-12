@@ -25,16 +25,12 @@ const TransactionDetails = () => {
                         transaction.acc_1_r.balance + amount;
                 }
 
-                await axios.patch(
-                    `${apiUrl}/accounts/${transaction.acc_1_r.id}/${transaction.acc_1_r.balance}`
-                );
+              
             } else if (transaction.type == "Income") {
                 transaction.acc_1_r.balance =
                     transaction.acc_1_r.balance - amount;
 
-                await axios.patch(
-                    `${apiUrl}/accounts/${transaction.acc_1_r.id}/${transaction.acc_1_r.balance}`
-                );
+              
             } else {
                 if (transaction.acc_1_r.type !== "Credit") {
                     transaction.acc_1_r.balance =
@@ -44,9 +40,6 @@ const TransactionDetails = () => {
                         transaction.acc_1_r.balance - amount;
                 }
 
-                await axios.patch(
-                    `${apiUrl}/accounts/${transaction.acc_1_r.id}/${transaction.acc_1_r.balance}`
-                );
 
                 if (transaction.acc_2_r) {
                     if (
@@ -60,9 +53,7 @@ const TransactionDetails = () => {
                             transaction.acc_2_r.balance + amount;
                     }
 
-                    await axios.patch(
-                        `${apiUrl}/accounts/${transaction.acc_2_r.id}/${transaction.acc_2_r.balance}`
-                    );
+
                 }
             }
 

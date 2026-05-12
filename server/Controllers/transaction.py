@@ -9,6 +9,10 @@ from DTOs.transaction import Transaction_Dto
 router = APIRouter()
 service = Transaction_Service()
 
+# @router.get("/transactions/total-balance/{user_id}/{account_type}", response_model=int)
+# def get_total_amount_by_account_type(user_id: str, account_type: str, db: Session = Depends(get_db)):        
+#     return service.get_total_amount_by_account_type(db, user_id, account_type)
+
 @router.post("/transactions", response_model=Transaction_Dto)
 def create_transaction(body: Transaction_Dto, db: Session = Depends(get_db)):
     transaction = service.create_transaction(db, body)
@@ -21,8 +25,15 @@ def create_transaction(body: Transaction_Dto, db: Session = Depends(get_db)):
         
     return transaction
 
-@router.get("/transactions/{user_id}/{type}/{page_num}")
-def get_transactions(user_id, type, page_num, db: Session = Depends(get_db)):
+
+
+@router.get("/transactions")
+def get_transactions(
+    user_id: str,
+    type: str,
+    page_num: int,
+    db: Session = Depends(get_db)
+):
     page_num = int(page_num) 
     transactions = service.get_transactions(db, type, user_id, page_num)
 
@@ -46,6 +57,14 @@ def delete_transaction(id: str, db: Session = Depends(get_db)):
         
     return deleted
 
-@router.get("/{user_id}/{account_type}/total")
-def get_total_amount_by_account_type(user_id: str, account_type: str, db: Session = Depends(get_db)):        
+
+
+
+@router.get("/transactions/total-balance/{user_id}/{account_type}")
+def get_total_amount_by_account_type(
+    user_id: str,
+    account_type: str,
+    db: Session = Depends(get_db)
+):
     return service.get_total_amount_by_account_type(db, user_id, account_type)
+

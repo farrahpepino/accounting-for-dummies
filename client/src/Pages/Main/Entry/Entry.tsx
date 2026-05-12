@@ -26,14 +26,13 @@ const Entry = () => {
         ...creditAccounts
     ];
 
-    const pairId = uuidv4();
-
+    const pairId = String(uuidv4());
     const [formData, setFormData] = useState<{
         user_id: string;
         date: string;
         type: string;
         acc_1: string;
-        acc_2: string | null;
+        acc_2: string;
         category: string;
         amount: string;
         note: string;
@@ -42,7 +41,7 @@ const Entry = () => {
         date: new Date().toISOString(),
         type: "",
         acc_1: "",
-        acc_2: null,
+        acc_2: "",
         category: "",
         amount: "",
         note: ""
@@ -93,7 +92,6 @@ const Entry = () => {
         setFormData((prev) => ({
             ...prev,
             type,
-            acc_2: type === "Transfer" ? formData.acc_2 : null
         }));
 
         if (type !== "Transfer") {
@@ -107,7 +105,7 @@ const Entry = () => {
             category
         }));
     };
-
+    
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     
@@ -134,7 +132,7 @@ const Entry = () => {
                     acc_1: formData.acc_1,
                     acc_2: null,
                     category: formData.category,
-
+                    pair_id: pairId,
                     is_source: true,
                     amount: amount,
                     note: formData.note
@@ -156,6 +154,7 @@ const Entry = () => {
                     acc_1: formData.acc_1,
                     acc_2: null,
                     category: formData.category,
+                    pair_id: pairId,
                     is_source: true,
                     amount: amount,
                     note: formData.note
@@ -168,16 +167,13 @@ const Entry = () => {
     
                 if (acc1.data.type !== "Credit") {
                     acc1.data.balance -= amount;
-                    acc2.data.balance +=amount;
-
-                    
+                    acc2.data.balance +=amount;         
                 } 
                 else if (acc1.data.type === "Credit") {
                     acc1.data.balance += amount;
                     acc2.data.balance +=amount;
                 } 
     
-                await axios.patch(`${apiUrl}/accounts/${formData.acc_2}/${acc2.data.balance}`);
     
                 await axios.post(`${apiUrl}/transactions`, {
                     user_id: formData.user_id,
@@ -195,20 +191,16 @@ const Entry = () => {
                 await axios.post(`${apiUrl}/transactions`, {
                     user_id: formData.user_id,
                     date: formData.date,
-                    type: "Transfer",
+                    type: formData.type,
                     acc_1: formData.acc_2,
                     acc_2: formData.acc_1,
-                    category: "Transfer",
+                    category: formData.category,
                     amount: amount,
                     is_source: false,
                     pair_id: pairId,
                     note: formData.note
                 });
             }
-
-           
-    
-            await axios.patch(`${apiUrl}/accounts/${formData.acc_1}/${acc1.data.balance}`);
     
             handleClear();
             navigate("/transactions");
@@ -227,7 +219,7 @@ const Entry = () => {
             date: new Date().toISOString(),
             type: "",
             acc_1: "",
-            acc_2: null,
+            acc_2: "",
             category: "",
             amount: "",
             note: ""

@@ -20,12 +20,6 @@ const AccountEdit = () => {
         e.preventDefault();
     
         try {
-
-            await axios.patch(`${apiUrl}/accounts`, {
-                id: account.id,
-                bank: bank
-            });
-
             navigate("/accounts");
 
         } catch (error) {

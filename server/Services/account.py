@@ -15,9 +15,6 @@ class Account_Service:
     def get_account (self, db, id: str):
         return self.repository.get_account(db, id)
     
-    def update_balance(self, db, balance:float, id:str):
-        return self.repository.update_balance(db, balance, id)
-    
     def update_account(self, db, account_dto: Account_Dto ):
         return self.repository.update_account(db, account_dto)
     

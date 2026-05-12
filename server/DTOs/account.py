@@ -9,7 +9,6 @@ class Account_Dto(BaseModel):
     user_id: str
     type: str 
     bank: str 
-    balance: Optional[float] = 0.0
     date: Optional[datetime] = None
     last_digits: int
     is_edited: bool = True

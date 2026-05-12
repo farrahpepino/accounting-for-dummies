@@ -3,6 +3,9 @@ import Logo from "../../Shared/Logo/Logo";
 import Sidebar from "../../Shared/Navigation/Sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+
+
 
 const Account = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -17,7 +20,8 @@ const Account = () => {
         date: new Date().toISOString(),
         last_digits: ""
     });
-
+    
+    const pairId = String(uuidv4());
     const isFormValid =
     formData.type.trim() !== "" &&
     formData.bank.trim() !== "" &&
@@ -48,7 +52,13 @@ const Account = () => {
 
         try {
             const res = await axios.post(`${apiUrl}/accounts`,
-                formData
+                {
+                    type: formData.type,
+                    user_id: user?.id,
+                    bank: formData.bank,
+                    date: formData.date,
+                    last_digits: formData.last_digits
+                }
             );
 
             await axios.post(`${apiUrl}/transactions`, {
@@ -60,7 +70,7 @@ const Account = () => {
                 category: null,
                 amount: formData.balance,
                 is_source: true,
-                pair_id: null,
+                pair_id: pairId,
                 note: ""
             });
           

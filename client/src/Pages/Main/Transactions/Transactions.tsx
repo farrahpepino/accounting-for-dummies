@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Transactions = () => {
+
     const [page, setPage] = useState(1);
 
     const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -16,27 +17,31 @@ const Transactions = () => {
     const [selectedType, setSelectedType] = useState("Checking");
     const [transactions, setTransactions] = useState<TransactionDto[]>([]);
     const [totalPages, setTotalPages] = useState(1);
-    const navigate = useNavigate()
-    let balance = 0;
+
+    const navigate = useNavigate();
 
     const entities = [
         "Date", "Type", "Account", "Amount", "Inflow", "Outflow", "Balance"
     ];
 
     const getTransactions = async (type: string) => {
-        const res = await axios.get(
-            `${apiUrl}/transactions/${user.id}/${type}/${page}`
-        );
+        const res = await axios.get(`${apiUrl}/transactions`, {
+            params: {
+                user_id: user.id,
+                page_num: page,
+                type: type,
+            }
+        });
+
         return res.data;
     };
-
 
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
                 const data = await getTransactions(selectedType);
-                setTransactions(data.transactions);
-                setTotalPages(data.total_pages);
+                setTransactions(data.transactions || []);
+                setTotalPages(data.total_pages || 1);
             } catch (err) {
                 console.error("Failed to fetch transactions:", err);
             }
@@ -44,6 +49,27 @@ const Transactions = () => {
 
         fetchTransactions();
     }, [selectedType, page]);
+        
+            
+    const transactionsWithBalance = transactions.map((transaction) => {
+
+        let inflow = false;
+        let outflow = false;
+
+        if (transaction.type === "Income") {
+            inflow = true;
+        } else if (transaction.type === "Expense") {
+            outflow = true;
+        } else if (transaction.type === "Transfer") {
+            transaction.is_source ? outflow = true : inflow = true;
+        }
+        
+        return {
+            transaction,
+            inflow,
+            outflow
+        };
+    });
 
     return (
         <div>
@@ -61,7 +87,7 @@ const Transactions = () => {
                                 <div>{selectedType}</div>
 
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
-                                    <path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/>
+                                    <path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z" />
                                 </svg>
 
                                 <div className="types-child border">
@@ -93,43 +119,18 @@ const Transactions = () => {
                             </thead>
 
                             <tbody>
-                                {transactions.map((transaction) => {
-
-                                    let inflow = false;
-                                    let outflow = false;
-
-                                    if (transaction.type === "Income") {
-                                        inflow = true;
-                                    } else if (transaction.type === "Expense") {
-                                        outflow = true;
-                                    } else if (transaction.type === "Transfer") {
-                                        if(transaction.is_source==true){
-                                            if(transaction.acc_1_r.type==="Credit"){
-                                                outflow=true
-                                            }else{
-                                                inflow=true
-                                            }
-                                        }
-                                        else{
-                                            if(transaction.acc_1_r.type!=="Credit"){
-                                                inflow=true
-                                            }else{
-                                                outflow=true
-                                            }
-                                        }
-
-                                    }
-
-                                    if (inflow) balance += transaction.amount;
-                                    if (outflow) balance -= transaction.amount;
+                                {transactionsWithBalance.map(({ transaction, inflow, outflow }) => {
 
                                     return (
-                                        <tr key={transaction.id} className='span divider'
-                                        onClick={() => {
-                                            navigate("/transaction", {
-                                                state: { transaction }
-                                            })
-                                        }}>
+                                        <tr
+                                            key={transaction.id}
+                                            className='span divider'
+                                            onClick={() => {
+                                                navigate("/details", {
+                                                    state: { transaction }
+                                                });
+                                            }}
+                                        >
                                             <td>
                                                 {new Date(transaction.date + "T12:00:00").toLocaleDateString('en-US')}
                                             </td>
@@ -138,8 +139,9 @@ const Transactions = () => {
 
                                             <td className='gap-5'>
                                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#938D8D">
-                                                    <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z"/>
+                                                    <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z" />
                                                 </svg>
+
                                                 {transaction.acc_1_r.last_digits}
                                             </td>
 
@@ -148,9 +150,8 @@ const Transactions = () => {
                                                 {CompactNumber(transaction.amount)}
                                             </td>
 
-                                            {/* INFLOW */}
                                             <td>
-                                                {(inflow) && (
+                                                {inflow && (
                                                     <div className="debit">
                                                         <span className='sub mr-5'>$</span>
                                                         {CompactNumber(transaction.amount)}
@@ -158,9 +159,8 @@ const Transactions = () => {
                                                 )}
                                             </td>
 
-                                            {/* OUTFLOW */}
                                             <td>
-                                                {(outflow) && (
+                                                {outflow && (
                                                     <div className="credit">
                                                         <span className='sub mr-5'>$</span>
                                                         {CompactNumber(transaction.amount)}
@@ -169,10 +169,9 @@ const Transactions = () => {
                                             </td>
 
                                             <td>
-                                                <span className='sub mr-5'>$</span>
-                                                {CompactNumber(balance)}
+                                                <span className='sub mr-5'>$
+                                                </span>
                                             </td>
-
                                         </tr>
                                     );
                                 })}
@@ -190,12 +189,14 @@ const Transactions = () => {
                             onClick={() => {
                                 if (page > 1) setPage(page - 1);
                             }}
-                            className={`page-btn ${page >= 1 ? "disabled" : ""}`}
+                            className={`page-btn ${page <= 1 ? "disabled" : ""}`}
                         >
-                            <path d="M560-253.85 333.85-480 560-706.15 602.15-664l-184 184 184 184L560-253.85Z"/>
+                            <path d="M560-253.85 333.85-480 560-706.15 602.15-664l-184 184 184 184L560-253.85Z" />
                         </svg>
 
-                        <div>Pages <strong>{page}</strong> / {totalPages}</div>
+                        <div>
+                            Pages <strong>{page}</strong> / {totalPages}
+                        </div>
 
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -206,9 +207,9 @@ const Transactions = () => {
                             onClick={() => {
                                 if (page < totalPages) setPage(page + 1);
                             }}
-                            className={`page-btn ${page <= totalPages ? "disabled" : ""}`}
+                            className={`page-btn ${page >= totalPages ? "disabled" : ""}`}
                         >
-                            <path d="m517.85-480-184-184L376-706.15 602.15-480 376-253.85 333.85-296l184-184Z"/>
+                            <path d="m517.85-480-184-184L376-706.15 602.15-480 376-253.85 333.85-296l184-184Z" />
                         </svg>
                     </div>
 

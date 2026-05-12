@@ -7,6 +7,7 @@ const Settings = () => {
 
     // const apiUrl = import.meta.env.VITE_API_URL; 
     const user = JSON.parse(localStorage.getItem("user") || "{}");
+    
     // const navigate = useNavigate();
 
     return (

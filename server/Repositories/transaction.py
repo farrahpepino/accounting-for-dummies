@@ -1,10 +1,8 @@
 from sqlalchemy.orm import Session, joinedload
 from Schemas.transaction import Transaction
-from sqlalchemy import func
-
+from sqlalchemy import case, func
 
 from DTOs.transaction import Transaction_Dto
-
 
 class Transaction_Repository:
     def create_transaction(self, db:Session, transaction_dto: Transaction_Dto):
@@ -80,8 +78,24 @@ class Transaction_Repository:
     
     def get_total_amount_by_account_type(self, db: Session, user_id: str, account_type: str):
 
+        amount_case = case(
+            (Transaction.type == "Income", Transaction.amount),
+
+            (Transaction.type == "Expense", -Transaction.amount),
+
+            (
+                Transaction.type == "Transfer",
+                case(
+                    (Transaction.is_source == True, -Transaction.amount),
+                    else_=Transaction.amount
+                )
+            ),
+
+            else_=0
+        )
+
         result = (
-            db.query(func.sum(Transaction.amount))
+            db.query(func.sum(amount_case))
             .join(Transaction.acc_1_r)
             .filter(Transaction.user_id == user_id)
             .filter(Transaction.acc_1_r.has(type=account_type))

@@ -6,8 +6,7 @@ export async function GetBalance(type: string) {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     try {
-        const res = await axios.get(`${apiUrl}/${user.id}/${type}/total`);
-        console.log(res)
+        const res = await axios.get(`${apiUrl}/transactions/total-balance/${user.id}/${type}`);
         return res.data
         
 
