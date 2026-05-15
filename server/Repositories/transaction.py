@@ -22,7 +22,7 @@ class Transaction_Repository:
     transaction_type: Optional[str] = None,
     page_num: int = 1,
     page_size: int = 7
-):
+    ):
         offset = (page_num - 1) * page_size
 
         query = (
