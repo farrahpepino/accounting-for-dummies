@@ -247,6 +247,7 @@ const Entry = () => {
                                     <div className="span">
                                         <strong className="mr-2">Date</strong>
                                         <input
+                                            title="date"
                                             type="date"
                                             name="date"
                                             value={formData.date}
@@ -372,6 +373,7 @@ const Entry = () => {
                                     <div className="span">
                                         <strong>Amount</strong>
                                         <input
+                                            title="amount"
                                             type="number"
                                             name="amount"
                                             value={formData.amount}
@@ -385,6 +387,7 @@ const Entry = () => {
                                     <div className="span">
                                         <strong>Note</strong>
                                         <input
+                                            title="note"
                                             type="text"
                                             name="note"
                                             value={formData.note}
