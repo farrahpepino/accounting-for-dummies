@@ -107,3 +107,13 @@ class Transaction_Repository:
         )
 
         return result or 0
+    
+    def update_transaction(self, db:Session, id: str, note: str):
+        
+        transaction = db.query(Transaction).filter(Transaction.id == id).first()
+        
+        transaction.note = note
+        transaction.is_edited = True
+        
+        db.commit()
+        return note

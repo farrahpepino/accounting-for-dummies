@@ -16,4 +16,7 @@ class Transaction_Service:
     
     def get_total_amount_by_account_type(self, db, user_id: str, account_type: str):
         return self.repository.get_total_amount_by_account_type(db, user_id, account_type)
+    
+    def update_transaction(self, db, id: str, note:str):
+        return self.repository.update_transaction(db, id, note)
    

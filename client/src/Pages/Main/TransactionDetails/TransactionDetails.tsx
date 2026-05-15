@@ -3,6 +3,7 @@ import Logo from "../../Shared/Logo/Logo";
 import "./TransactionDetails.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { useState } from "react";
 
 const TransactionDetails = () => {
     const navigate = useNavigate();
@@ -11,6 +12,17 @@ const TransactionDetails = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
 
     const { transaction } = location.state as any;
+    const [note, setNote] = useState(transaction.note || "");
+
+    const saveTransaction = async () => {
+        try {
+            await axios.patch(`${apiUrl}/transaction/${transaction.id}`, note);
+    
+            navigate("/transactions");
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     const deleteTransaction = async () => {
         try {
@@ -126,9 +138,15 @@ const TransactionDetails = () => {
 
                         <div>
                             <strong>Note</strong>
-                            <div className="ml-6 sub">
-                                {transaction.note || "N/A"}
-                            </div>
+                            <br />
+                            <input
+                            title="note"
+                            type="text"
+                            name="note"
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            className="input border ml-6"
+                            />
                         </div>
                     </div>
 
@@ -141,7 +159,7 @@ const TransactionDetails = () => {
 
                         <button
                             className="green-btn btn"
-                            onClick={() => navigate("/transactions")}
+                            onClick={saveTransaction}
                         >
                             Save
                         </button>

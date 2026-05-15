@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List, Optional
+from fastapi import Body
+
 
 from database import get_db
 from Services.transaction import Transaction_Service
@@ -20,8 +22,6 @@ def create_transaction(body: Transaction_Dto, db: Session = Depends(get_db)):
         ) 
         
     return transaction
-
-
 
 @router.get("/transactions")
 def get_transactions(
@@ -54,8 +54,6 @@ def delete_transaction(id: str, db: Session = Depends(get_db)):
     return deleted
 
 
-
-
 @router.get("/transactions/total-balance/{user_id}/{account_type}")
 def get_total_amount_by_account_type(
     user_id: str,
@@ -64,3 +62,6 @@ def get_total_amount_by_account_type(
 ):
     return service.get_total_amount_by_account_type(db, user_id, account_type)
 
+@router.patch("/transaction/{id}", response_model=str)
+def update_transaction(id: str, note: str = Body(...), db: Session = Depends(get_db)):
+    return service.update_transaction(db, id, note)

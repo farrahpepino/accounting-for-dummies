@@ -27,16 +27,8 @@ const Entry = () => {
     ];
 
     const pairId = String(uuidv4());
-    const [formData, setFormData] = useState<{
-        user_id: string;
-        date: string;
-        type: string;
-        acc_1: string;
-        acc_2: string;
-        category: string;
-        amount: string;
-        note: string;
-    }>({
+
+    const [formData, setFormData] = useState({
         user_id: user.id,
         date: new Date().toISOString(),
         type: "",
@@ -53,18 +45,9 @@ const Entry = () => {
 
         const fetchAccounts = async () => {
             try {
-
-                const checking = await axios.get(
-                    `${apiUrl}/accounts/${user.id}/Checking`
-                );
-
-                const credit = await axios.get(
-                    `${apiUrl}/accounts/${user.id}/Credit`
-                );
-
-                const savings = await axios.get(
-                    `${apiUrl}/accounts/${user.id}/Savings`
-                );
+                const checking = await axios.get(`${apiUrl}/accounts/${user.id}/Checking`);
+                const credit = await axios.get(`${apiUrl}/accounts/${user.id}/Credit`);
+                const savings = await axios.get(`${apiUrl}/accounts/${user.id}/Savings`);
 
                 setCheckingAccounts(checking.data);
                 setCreditAccounts(credit.data);
@@ -105,20 +88,35 @@ const Entry = () => {
             category
         }));
     };
-    
+
+    const isValid = () => {
+        if (!formData.type) return false;
+        if (!formData.acc_1) return false;
+        if (!formData.date) return false;
+        if (!formData.amount) return false;
+
+        if (formData.type !== "Income" && formData.type !== "Transfer") {
+            if (!formData.category) return false;
+        }
+
+        if (formData.type === "Transfer" && !formData.acc_2) return false;
+
+        return true;
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-    
-        if (!formData.acc_1 || !formData.type) return;
-    
+
+        if (!isValid()) return;
+
         try {
-    
+
             const amount = Number(formData.amount);
-    
+
             const acc1 = await axios.get(`${apiUrl}/accounts/${formData.acc_1}`);
-    
+
             if (formData.type === "Expense") {
-    
+
                 if (acc1.data.type === "Credit") {
                     acc1.data.balance += amount;
                 } else {
@@ -137,10 +135,11 @@ const Entry = () => {
                     amount: amount,
                     note: formData.note
                 });
-    
-            } 
+
+            }
+
             else if (formData.type === "Income") {
-    
+
                 if (acc1.data.type === "Credit") {
                     acc1.data.balance -= amount;
                 } else {
@@ -159,22 +158,22 @@ const Entry = () => {
                     amount: amount,
                     note: formData.note
                 });
-    
-            } 
+
+            }
+
             else {
-    
+
                 const acc2 = await axios.get(`${apiUrl}/accounts/${formData.acc_2}`);
-    
+
                 if (acc1.data.type !== "Credit") {
                     acc1.data.balance -= amount;
-                    acc2.data.balance +=amount;         
-                } 
+                    acc2.data.balance += amount;
+                }
                 else if (acc1.data.type === "Credit") {
                     acc1.data.balance += amount;
-                    acc2.data.balance +=amount;
-                } 
-    
-    
+                    acc2.data.balance += amount;
+                }
+
                 await axios.post(`${apiUrl}/transactions`, {
                     user_id: formData.user_id,
                     date: formData.date,
@@ -187,7 +186,7 @@ const Entry = () => {
                     pair_id: pairId,
                     note: formData.note
                 });
-    
+
                 await axios.post(`${apiUrl}/transactions`, {
                     user_id: formData.user_id,
                     date: formData.date,
@@ -196,15 +195,14 @@ const Entry = () => {
                     acc_2: formData.acc_1,
                     category: formData.category,
                     amount: amount,
-                    is_source: false,
                     pair_id: pairId,
                     note: formData.note
                 });
             }
-    
+
             handleClear();
             navigate("/transactions");
-    
+
         } catch (err) {
             console.error("Transaction cannot be created:", err);
         }
@@ -239,216 +237,181 @@ const Entry = () => {
                     <br /><br /><br />
 
                     {
-                        accounts.length===0 ? 
-                        <div className="center sub">Make sure to add an account first</div> :
+                        accounts.length === 0 ?
+                            <div className="center sub">Make sure to add an account first</div> :
 
-                    <form onSubmit={handleSubmit}>
+                            <form onSubmit={handleSubmit}>
 
-                        <div>
+                                <div>
 
-                            <div className="span">
-                                <strong className="mr-2">Date</strong>
-
-                                <input
-                                    title="date"
-                                    type="date"
-                                    name="date"
-                                    value={formData.date}
-                                    onChange={handleChange}
-                                    className="border input"
-                                />
-                            </div>
-
-                            <br />
-
-                            <div>
-                                <strong>Type</strong>
-
-                                <div className="span mt ml-4">
-
-                                    <div className="span mr-2" onClick={() => handleType("Income")}>
-                                        <div className={`option-btn ${formData.type === "Income" ? "selected" : ""}`}></div>
-                                        <span>Income</span>
-                                    </div>
-
-                                    <div className="span mr-2" onClick={() => handleType("Expense")}>
-                                        <div className={`option-btn ${formData.type === "Expense" ? "selected" : ""}`}></div>
-                                        <span>Expense</span>
-                                    </div>
-
-                                    <div className="span mr-2" onClick={() => handleType("Transfer")}>
-                                        <div className={`option-btn ${formData.type === "Transfer" ? "selected" : ""}`}></div>
-                                        <span>Transfer</span>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div className="span">
-                                <div className="span">
-                                    
-                                    <strong>Source</strong>
-                                   
-                                    <div className="span ml-2 mr-2 digits-parent">
-                            
-                                        <span className="gap-5">
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#938D8D">
-                                                <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z"/>
-                                            </svg>
-
-                                            {selectedFrom
-                                                ? selectedFrom.last_digits
-                                                : "Select"}
-                                        </span>
-
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
-                                            <path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/>
-                                        </svg>
-                                    
-                                    
-                                        <div className={`${accounts.length===0 ? "hidden" : "border digits-child"}`}>                                            {accounts.map((acc) => (
-                                                <div
-                                                    key={acc.id}
-                                                    className="pointer"
-                                                    onClick={() => {
-                                                        setSelectedFrom(acc);
-                                                        setFormData((prev) => ({
-                                                            ...prev,
-                                                            acc_1: acc.id!
-                                                        }));
-                                                    }}
-                                                >
-                                                    {acc.last_digits}
-                                                </div>
-                                            ))}
-                                        </div>
-                                
-
-                                    </div>
-                                </div>
-                                
-
-                                {isTransfer && (
                                     <div className="span">
-                                        <strong>Destination</strong>
+                                        <strong className="mr-2">Date</strong>
+                                        <input
+                                            type="date"
+                                            name="date"
+                                            value={formData.date}
+                                            onChange={handleChange}
+                                            className="border input"
+                                        />
+                                    </div>
 
-                                        <div className="span ml-2 mr-2 digits-parent">
+                                    <br />
 
-                                            <span className="gap-5">
-                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#938D8D">
-                                                    <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z"/>
-                                                </svg>
+                                    <div>
+                                        <strong>Type</strong>
 
-                                                {selectedTo
-                                                    ? selectedTo.last_digits
-                                                    : "Select"}
-                                            </span>
+                                        <div className="span mt ml-4">
 
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
-                                                <path d="M480-357.85 253.85-584 296-626.15l184 184 184-184L706.15-584 480-357.85Z"/>
-                                            </svg>
+                                            <div className="span mr-2" onClick={() => handleType("Income")}>
+                                                <div className={`option-btn ${formData.type === "Income" ? "selected" : ""}`}></div>
+                                                <span>Income</span>
+                                            </div>
 
-                                            <div className="border digits-child">
-                                                {accounts.map((acc) => (
-                                                    <div
-                                                        key={acc.id}
-                                                        className="pointer"
-                                                        onClick={() => {
-                                                            setSelectedTo(acc);
-                                                            setFormData((prev) => ({
-                                                                ...prev,
-                                                                acc_2: acc.id!
-                                                            }));
-                                                        }}
-                                                    >
-                                                        {acc.last_digits}
-                                                    </div>
-                                                ))}
+                                            <div className="span mr-2" onClick={() => handleType("Expense")}>
+                                                <div className={`option-btn ${formData.type === "Expense" ? "selected" : ""}`}></div>
+                                                <span>Expense</span>
+                                            </div>
+
+                                            <div className="span mr-2" onClick={() => handleType("Transfer")}>
+                                                <div className={`option-btn ${formData.type === "Transfer" ? "selected" : ""}`}></div>
+                                                <span>Transfer</span>
                                             </div>
 
                                         </div>
                                     </div>
-                                )}
 
-                            </div>
+                                    <br />
 
-                            <br />
+                                    <div className="span">
 
-                            {(formData.type !== "Transfer" && formData.type !== "Income") && (
-                            <div>
-                                <strong>Category</strong>
+                                        <div className="span">
+                                            <strong>Source</strong>
 
-                                <div className="mt ml-4">
+                                            <div className="span ml-2 mr-2 digits-parent">
 
-                                    {["Essentials", "Lifestyle", "Growth", "Misc"].map((c) => (
-                                        <div key={c} className="span" onClick={() => handleCategory(c)}>
-                                            <div className={`option-btn ${formData.category === c ? "selected" : ""}`}></div>
-                                            <span>{c}</span>
+                                                <span>
+                                                    {selectedFrom ? selectedFrom.last_digits : "Select"}
+                                                </span>
+
+                                                <div className="border digits-child">
+                                                    {accounts.map((acc) => (
+                                                        <div
+                                                            key={acc.id}
+                                                            className="pointer"
+                                                            onClick={() => {
+                                                                setSelectedFrom(acc);
+                                                                setFormData((prev) => ({
+                                                                    ...prev,
+                                                                    acc_1: acc.id!
+                                                                }));
+                                                            }}
+                                                        >
+                                                            {acc.last_digits}
+                                                        </div>
+                                                    ))}
+                                                </div>
+
+                                            </div>
                                         </div>
-                                    ))}
+
+                                        {isTransfer && (
+                                            <div className="span">
+                                                <strong>Destination</strong>
+
+                                                <div className="span ml-2 mr-2 digits-parent">
+
+                                                    <span>
+                                                        {selectedTo ? selectedTo.last_digits : "Select"}
+                                                    </span>
+
+                                                    <div className="border digits-child">
+                                                        {accounts.map((acc) => (
+                                                            <div
+                                                                key={acc.id}
+                                                                className="pointer"
+                                                                onClick={() => {
+                                                                    setSelectedTo(acc);
+                                                                    setFormData((prev) => ({
+                                                                        ...prev,
+                                                                        acc_2: acc.id!
+                                                                    }));
+                                                                }}
+                                                            >
+                                                                {acc.last_digits}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        )}
+
+                                    </div>
+
+                                    <br />
+
+                                    {(formData.type !== "Transfer" && formData.type !== "Income") && (
+                                        <div>
+                                            <strong>Category</strong>
+
+                                            <div className="mt ml-4">
+
+                                                {["Essentials", "Lifestyle", "Growth", "Misc"].map((c) => (
+                                                    <div key={c} className="span" onClick={() => handleCategory(c)}>
+                                                        <div className={`option-btn ${formData.category === c ? "selected" : ""}`}></div>
+                                                        <span>{c}</span>
+                                                    </div>
+                                                ))}
+
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <br />
+
+                                    <div className="span">
+                                        <strong>Amount</strong>
+                                        <input
+                                            type="number"
+                                            name="amount"
+                                            value={formData.amount}
+                                            onChange={handleChange}
+                                            className="border ml-2 input"
+                                        />
+                                    </div>
+
+                                    <br />
+
+                                    <div className="span">
+                                        <strong>Note</strong>
+                                        <input
+                                            type="text"
+                                            name="note"
+                                            value={formData.note}
+                                            onChange={handleChange}
+                                            className="border ml-2 input"
+                                        />
+                                    </div>
 
                                 </div>
-                            </div>
-                            )
-                            }
 
-                            <br />
+                                <br /><br />
 
-                            <div className="span">
-                                <strong>Amount</strong>
+                                <div className="span set-buttons">
 
-                                <input
-                                    title="amount"
-                                    type="number"
-                                    name="amount"
-                                    value={formData.amount}
-                                    onChange={handleChange}
-                                    className="border ml-2 input"
-                                />
-                            </div>
+                                    <button type="button" className="red-btn btn" onClick={handleClear}>
+                                        Clear
+                                    </button>
 
-                            <br /><br />
+                                    <button className="green-btn btn" type="submit">
+                                        Add
+                                    </button>
 
-                            {formData.type !== "Transfer" && (
-                            <div className="xs sub">To get a behavioral insight and if applicable, what and when did you spend?</div>
-                            )
-                            }
+                                </div>
 
-                            <br />
+                            </form>
+                    }
 
-                            <div className="span">
-                                <strong>Note</strong>
-
-                                <input
-                                    title="note"
-                                    type="text"
-                                    name="note"
-                                    value={formData.note}
-                                    onChange={handleChange}
-                                    className="border ml-2 input"
-                                />
-                            </div>
-
-                        </div>
-
-                        <br /><br /><br />
-
-                        <div className="span set-buttons">
-
-                            <button type="button" className="red-btn btn" onClick={handleClear}>
-                                Clear
-                            </button>
-
-                            <button className="green-btn btn" type="submit">
-                                Add
-                            </button>
-
-                        </div>
-
-                    </form>
-}
                 </div>
             </div>
         </div>
