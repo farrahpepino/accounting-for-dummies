@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from database import get_db
 from Services.transaction import Transaction_Service
@@ -8,10 +8,6 @@ from DTOs.transaction import Transaction_Dto
 
 router = APIRouter()
 service = Transaction_Service()
-
-# @router.get("/transactions/total-balance/{user_id}/{account_type}", response_model=int)
-# def get_total_amount_by_account_type(user_id: str, account_type: str, db: Session = Depends(get_db)):        
-#     return service.get_total_amount_by_account_type(db, user_id, account_type)
 
 @router.post("/transactions", response_model=Transaction_Dto)
 def create_transaction(body: Transaction_Dto, db: Session = Depends(get_db)):
@@ -30,13 +26,13 @@ def create_transaction(body: Transaction_Dto, db: Session = Depends(get_db)):
 @router.get("/transactions")
 def get_transactions(
     user_id: str,
-    type: str,
-    page_num: int,
+    account_type: str,
+    page_num: int = 1,
+    transaction_type: Optional[str] = None,
     db: Session = Depends(get_db)
 ):
     page_num = int(page_num) 
-    transactions = service.get_transactions(db, type, user_id, page_num)
-
+    transactions = service.get_transactions(db, user_id, account_type, transaction_type,  page_num)
     if transactions is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

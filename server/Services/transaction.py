@@ -8,8 +8,8 @@ class Transaction_Service:
     def create_transaction(self, db, transaction: Transaction_Dto):
         return self.repository.create_transaction(db, transaction)
     
-    def get_transactions(self, db, type: str, user_id: str, page_num: int):
-        return self.repository.get_transactions(db, type, user_id, page_num)
+    def get_transactions(self, db, user_id: str, account_type: str, transaction_type: str, page_num: int):
+        return self.repository.get_transactions(db, user_id, account_type, transaction_type, page_num)
     
     def delete_transaction(self, db, id: str):
         return self.repository.delete_transaction(db, id)

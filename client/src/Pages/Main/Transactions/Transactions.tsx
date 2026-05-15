@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import type { TransactionDto } from '../../../DTOs/transaction';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Popup from '../../Shared/Popup/Popup';
 
 const Transactions = () => {
 
@@ -15,6 +16,8 @@ const Transactions = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
 
     const [selectedType, setSelectedType] = useState("Checking");
+    const [showPopup, setShowPopup] = useState(false);
+    const [transactionType, setTransactionType] = useState<string | null>(null);
     const [transactions, setTransactions] = useState<TransactionDto[]>([]);
     const [totalPages, setTotalPages] = useState(1);
 
@@ -24,12 +27,13 @@ const Transactions = () => {
         "Date", "Type", "Account", "Amount", "Inflow", "Outflow", "Balance"
     ];
 
-    const getTransactions = async (type: string) => {
+    const getTransactions = async (type: string, transaction_type: string | null) => {
         const res = await axios.get(`${apiUrl}/transactions`, {
             params: {
-                user_id: user.id,
+                user_id: user.id!,
+                account_type: type,
+                transaction_type: transaction_type,
                 page_num: page,
-                type: type,
             }
         });
 
@@ -39,7 +43,9 @@ const Transactions = () => {
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
-                const data = await getTransactions(selectedType);
+                const data = await getTransactions(selectedType, transactionType);
+                console.log("DATA:", data);
+
                 setTransactions(data.transactions || []);
                 setTotalPages(data.total_pages || 1);
             } catch (err) {
@@ -48,7 +54,7 @@ const Transactions = () => {
         };
 
         fetchTransactions();
-    }, [selectedType, page]);
+    }, [selectedType, page, transactionType]);
 
     const chronological = [...transactions].slice().reverse();
 
@@ -96,7 +102,21 @@ const Transactions = () => {
             <Sidebar />
 
             <div className='container'>
+           
                 <div className='box border'>
+                    {showPopup && (
+                        <Popup
+                            value={transactionType}
+
+                            onSelect={(type) => {
+                                setTransactionType(type)
+                                setShowPopup(false)
+                            }}
+
+                            onClose={() => setShowPopup(false)}
+                        />
+                        )}
+                    
 
                     <div className="span heading">
                         <div className="bold lg">Transactions</div>
@@ -115,6 +135,9 @@ const Transactions = () => {
                                     <div onClick={() => setSelectedType("Savings")}>Savings</div>
                                 </div>
                             </div>
+                            <button title='filter' className='transparent' onClick={()=>{setShowPopup(true)}}>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#938D8D"><path d="M400-240v-80h160v80H400ZM240-440v-80h480v80H240ZM120-640v-80h720v80H120Z"/></svg>
+                            </button>
                         </div>
                     </div>
 

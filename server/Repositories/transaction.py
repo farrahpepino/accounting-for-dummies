@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
 from Schemas.transaction import Transaction
 from sqlalchemy import case, func
+from typing import Optional
 
 from DTOs.transaction import Transaction_Dto
 
@@ -16,20 +17,24 @@ class Transaction_Repository:
     def get_transactions(
     self,
     db: Session,
-    type: str,
     user_id: str,
+    account_type: str,
+    transaction_type: Optional[str] = None,
     page_num: int = 1,
     page_size: int = 7
-    ):
-            
+):
         offset = (page_num - 1) * page_size
 
         query = (
             db.query(Transaction)
+            .join(Transaction.acc_1_r)
             .filter(Transaction.user_id == user_id)
-            .filter(Transaction.acc_1_r.has(type=type))
+            .filter(Transaction.acc_1_r.has(type=account_type))
         )
 
+        if transaction_type:
+            query = query.filter(Transaction.type == transaction_type)
+        
         total = query.count()
 
         transactions = (
@@ -38,14 +43,13 @@ class Transaction_Repository:
                 joinedload(Transaction.acc_1_r),
                 joinedload(Transaction.acc_2_r)
             )
-            .order_by(Transaction.date.desc()) 
+            .order_by(Transaction.date.desc())
             .offset(offset)
             .limit(page_size)
             .all()
         )
 
         total_pages = (total + page_size - 1) // page_size
-
         return {
             "transactions": transactions,
             "total_pages": total_pages
